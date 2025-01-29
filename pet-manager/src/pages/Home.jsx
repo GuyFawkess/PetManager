@@ -4,9 +4,9 @@ const Home = () => {
   return (
   
         <div className="container">
-            <h1>Welcome to my website!</h1>
+            <h1>Welcome to Pet Manager!</h1>
 
-            <p>This page should be protected by a PrivateRoutes component for authenticated users</p>
+            <p>This is a Web App where you can manager all your pet schudele!</p>
         </div>
 
   )
