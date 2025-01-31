@@ -1,7 +1,7 @@
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import PrivateRoutes from './utils/PrivateRoutes'
-import { AuthProvider } from './utils/AuthContext'
+import { AuthProvider } from './store/AuthContext'
 
 import Header from './components/Header'
 import Home from './pages/Home'
