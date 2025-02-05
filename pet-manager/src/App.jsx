@@ -8,6 +8,7 @@ import Home from './pages/Home'
 import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import MyCalendar from './pages/Calendar'
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
           <Route element={<PrivateRoutes />}>
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/calendar" element={<MyCalendar />} />
           </Route>
         </Routes>
       </AuthProvider>
