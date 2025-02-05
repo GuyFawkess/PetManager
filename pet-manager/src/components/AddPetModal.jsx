@@ -23,7 +23,7 @@ const AddPetModal = () => {
   return (
     <div>
       {/* Trigger */}
-      <button className="bg-blue-500 text-white px-4 py-2 rounded">Add Pet</button>
+      <button className="bg-blue-500 px-4 py-2 rounded">Add Pet</button>
 
       {/* Modal */}
       <div>
@@ -48,7 +48,7 @@ const AddPetModal = () => {
             <option value="Bird">Bird</option>
           </select>
 
-          <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
+          <button type="submit" className="bg-green-500 px-4 py-2 rounded">
             Save Pet
           </button>
         </form>
