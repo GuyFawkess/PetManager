@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { DATABASE_ID, COLLECTION_ID_PETS, database } from '../appwriteConfig';
+import { Query } from 'appwrite';
 
 
 // Zustand store for managing pets
@@ -11,7 +12,7 @@ const usePetsStore = create((set) => ({
     fetchPets: async (OwnerID) => {
         set({ loading: true });
         try {
-            const response = await database.listDocuments(DATABASE_ID, COLLECTION_ID_PETS);
+            const response = await database.listDocuments(DATABASE_ID, COLLECTION_ID_PETS, [Query.equal("OwnerID", OwnerID)]);
             console.log('RESPONSE', response);
             set({ pets: response.documents, loading: false });
         }catch (error) {
@@ -21,7 +22,6 @@ const usePetsStore = create((set) => ({
 
     },
 
-  // Action: Add a new pet
    // Action: Add a new pet
    createPet: async (petData, userID) => {
     set({ loading: true });

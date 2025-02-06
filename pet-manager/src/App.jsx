@@ -9,6 +9,7 @@ import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import MyCalendar from './pages/Calendar'
+import Card from './components/Card'
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
       <AuthProvider>
         <Header />
         <Routes>
+          <Route path='/tarjeta' element={<Card />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
