@@ -39,6 +39,7 @@ const Register = () => {
           <div className="form-field-wrapper">
             <label>Name:</label>
             <input
+            className='input-login-register'
               required
               type="text"
               name="name"
@@ -49,6 +50,7 @@ const Register = () => {
           <div className="form-field-wrapper">
             <label>Email:</label>
             <input
+            className='input-login-register'
               required
               type="email"
               name="email"
@@ -59,6 +61,7 @@ const Register = () => {
           <div className="form-field-wrapper">
             <label>Password:</label>
             <input
+            className='input-login-register'
               type="password"
               name="password1"
               placeholder="Enter password..."
@@ -68,6 +71,7 @@ const Register = () => {
           <div className="form-field-wrapper">
             <label>Confirm Password:</label>
             <input
+            className='input-login-register'
               type="password"
               name="password2"
               placeholder="Confirm password..."

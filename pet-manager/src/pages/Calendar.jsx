@@ -7,7 +7,7 @@ const localizer = dayjsLocalizer(dayjs)
 
 const events = [
   {
-    start: dayjs('2025-02-10T12:00:00').toDate(),
+    start: dayjs('2025-02-10T12:00:00').toDate(), 
     end: dayjs('2025-02-10T12:30:00').toDate(),
     title: "Visita veterinaria"
   },
