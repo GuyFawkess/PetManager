@@ -1,6 +1,6 @@
 import React from "react";
 
-const Card = () => {
+const CardSmall = () => {
 
 
 
@@ -45,4 +45,4 @@ const Card = () => {
 }
 
 
-export default Card;
+export default CardSmall;
