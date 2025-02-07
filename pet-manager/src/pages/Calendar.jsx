@@ -31,8 +31,10 @@ const components = {
 }
 
 const MyCalendar = (props) => (
-   <div className='bg-orange-400'>
+   <div className='m-12'>
+    
     <Calendar
+      className='bg-orange-400'
       localizer={localizer}
       events={events}
       startAccessor="start"
