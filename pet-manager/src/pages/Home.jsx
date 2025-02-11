@@ -9,7 +9,7 @@ const Home = () => {
   const [showModal, setShowModal] = useState(false);
   const { user } = useAuth();
 
-  const opneModal = () => {
+  const openModal = () => {
     console.log("Opening modal");
     setShowModal(true);
   };
@@ -41,7 +41,7 @@ const Home = () => {
           ))}
         </ul>
       )}
-      <Button handleClick={opneModal} text="Add Pet" />
+      <Button handleClick={openModal} text="Add Pet" />
       {showModal && <AddPetModal closeModal={closeModal}/>}
     </div>
   );

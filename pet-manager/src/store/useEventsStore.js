@@ -66,12 +66,11 @@ const useEventsStore = create((set) => ({
     set({ loading: true });
 
     try {
-      // Delete from Appwrite
       await database.deleteDocument(DATABASE_ID, COLLECTION_ID_EVENTS, id);
 
       // Update the store
       set((state) => ({
-        events: state.events.filter((event) => event.id !== id),
+        events: state.events.filter((event) => event.$id !== id),
         loading: false,
       }));
     } catch (error) {

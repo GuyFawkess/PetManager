@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import useEventsStore from '../store/useEventsStore';
 import { useAuth } from '../store/AuthContext';
 
+import AddEventModal from '../components/AddEventModal';
+import Button from '../components/Button';
+
 import { Calendar, dayjsLocalizer } from 'react-big-calendar';
 import dayjs from 'dayjs';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -18,16 +21,20 @@ const components = {
 };
 
 const MyCalendar = () => {
-  const { events, loading, fetchEvents, createEvent } = useEventsStore();
+  const { events, loading, fetchEvents } = useEventsStore();
   const {user} = useAuth();
+  const [showModal, setShowModal] = useState(false);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    start: '',
-    end: ''
-  });
+  const openModal = () => {
+    console.log('Opening modal');
+    setShowModal(true);
 
-  const [showForm, setShowForm] = useState(false);
+  }
+
+  const closeModal = () => {
+    console.log('Closing modal');
+    setShowModal(false);
+  }
 
   // Fetch events
   useEffect(() => {
@@ -36,100 +43,19 @@ const MyCalendar = () => {
     }
   }, [user]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-
-    // Validate form fields
-    if (!formData.title || !formData.start || !formData.end) {
-      alert('Please fill all the fields');
-      return;
-    }
-
-    // Validate date inputs
-    const startDate = new Date(formData.start);
-    const endDate = new Date(formData.end);
-
-    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-      alert('Invalid date format. Please check the start and end dates.');
-      return;
-    }
-
-    // Create new event
-    const newEvent = {
-      Title: formData.title,
-      StartDate: startDate.toISOString(),
-      EndDate: endDate.toISOString(),
-      OwnerID: user.$id
-    };
-
-    createEvent(newEvent); // Add the new event
-    setFormData({ title: '', start: '', end: '' }); // Reset form
-    setShowForm(false); // Close form
-  };
-
+  
   return (
-    <div className="bg-orange-400 p-4">
-      <button
-        onClick={() => setShowForm((prev) => !prev)}
-        className="bg-blue-500 text-white p-2 rounded mb-4"
-      >
-        {showForm ? 'Close Form' : 'Add Event'}
-      </button>
+    <div className="bg-green-200 p-4">
+   <Button handleClick={openModal} text="Add Event" />
+      {showModal && <AddEventModal closeModal={closeModal} />}
 
-      {showForm && (
-        <form onSubmit={handleFormSubmit} className="mb-4 bg-white p-4 rounded shadow">
-          <div className="mb-4">
-            <label className="block font-bold mb-2">Title</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-              className="border p-2 w-full rounded"
-              placeholder="Event Title"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block font-bold mb-2">Start Date & Time</label>
-            <input
-              type="datetime-local"
-              name="start"
-              value={formData.start}
-              onChange={handleInputChange}
-              className="border p-2 w-full rounded"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block font-bold mb-2">End Date & Time</label>
-            <input
-              type="datetime-local"
-              name="end"
-              value={formData.end}
-              onChange={handleInputChange}
-              className="border p-2 w-full rounded"
-              required
-            />
-          </div>
-
-          <button type="submit" className="bg-green-500 text-white p-2 rounded">
-            Add Event
-          </button>
-        </form>
-      )}
+      
+        
 
       {loading && <p>Loading events...</p>}
-
       <Calendar
-        className="bg-orange-400"
+        className="bg-sky-300"
         localizer={localizer}
         events={events}
         startAccessor="start"
@@ -137,6 +63,7 @@ const MyCalendar = () => {
         style={{ height: 500 }}
         components={components}
       />
+
     </div>
   );
 };
