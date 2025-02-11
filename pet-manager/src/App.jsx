@@ -10,6 +10,8 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import MyCalendar from './pages/Calendar'
 import CardSmall from './components/CardSmall'
+import AddEventModal from './components/AddEventModal'
+
 
 function App() {
 
@@ -18,7 +20,10 @@ function App() {
       <AuthProvider>
         <Header />
         <Routes>
-          <Route path='/tarjeta' element={<CardSmall />} />
+          {/* borar */}
+          <Route path='/tarjeta' element={<CardSmall />} /> 
+          <Route path='/events' element={<AddEventModal />} /> 
+          {/* borrar above */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
