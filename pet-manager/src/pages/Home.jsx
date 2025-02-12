@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import usePetsStore from "../store/usePetsStore";
 import AddPetModal from "../components/AddPetModal";
-import Button from "../components/Button"; 
+import Button from "../components/Button";
 import { useAuth } from "../store/AuthContext";
 
 const Home = () => {
@@ -30,19 +30,40 @@ const Home = () => {
       <h1 className="font-bold mb-4 text-3xl text-red-500">Welcome {user.name}</h1>
       {/* Pet List */}
       {loading ? (
-        <p>Loading pets...</p>
+        <div className="flex justify-center items-center h-screen">
+          <span className="loading loading-spinner loading-xl"></span>
+        </div>
       ) : (
-        <ul className="list-disc pl-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-5">
           {pets.map((pet) => (
-            <li key={pet.$id} className="p-2 mb-2">
-              {pet.Name} - {pet.Type}
-              <label onClick={() => removePet(pet.$id)} className="absolute right-5 text-2xl hover:cursor-pointer">X</label>
-            </li>
+            <div key={pet.$id} className="card bg-base-100 w-80 h-110 shadow-md">
+              <figure>
+                <img
+                  src={pet.image || "https://picsum.photos/id/237/300/400"}
+                  alt={pet.Name}
+                  className="h-auto w-full object-cover"
+                />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title">{pet.Name}</h2>
+                <p>Type: {pet.Type}</p>
+                <div className="card-actions justify-end">
+                  <button
+                    onClick={() => removePet(pet.$id)}
+                    className="btn btn-error "
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
           ))}
-        </ul>
-      )}
+
+        </div>
+      )
+      }
       <Button handleClick={openModal} text="Add Pet" />
-      {showModal && <AddPetModal closeModal={closeModal}/>}
+      {showModal && <AddPetModal closeModal={closeModal} />}
     </div>
   );
 };

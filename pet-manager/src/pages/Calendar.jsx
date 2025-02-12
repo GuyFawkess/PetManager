@@ -46,7 +46,7 @@ const MyCalendar = () => {
 
   
   return (
-    <div className="bg-green-200 p-4">
+    <div>
    <Button handleClick={openModal} text="Add Event" />
       {showModal && <AddEventModal closeModal={closeModal} />}
 
@@ -55,7 +55,6 @@ const MyCalendar = () => {
 
       {loading && <p>Loading events...</p>}
       <Calendar
-        className="bg-sky-300"
         localizer={localizer}
         events={events}
         startAccessor="start"
