@@ -1,24 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useEventsStore from "../store/useEventsStore";
+import usePetsStore from "../store/usePetsStore";
 import { useAuth } from "../store/AuthContext";
 
 const AddEventModal = ({ closeModal }) => {
 
     const { createEvent } = useEventsStore();
+    const { pets, fetchPets, loading } = usePetsStore();
     const { user } = useAuth();
     const [formData, setFormData] = useState({
         title: '',
         start: '',
-        end: ''
+        end: '',
+        pet: '',
+        petID: ''
     });
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+        if (name === "pet") {
+          const selectedPet = pets.find(pet => pet.Name === value);
+          setFormData((prev) => ({ ...prev, petID: selectedPet ? selectedPet.$id : '' }));
+        }
       };
 
       const handleFormSubmit = (e) => {
         e.preventDefault();
+
     
         // Validate form fields
         if (!formData.title || !formData.start || !formData.end) {
@@ -40,11 +49,13 @@ const AddEventModal = ({ closeModal }) => {
           Title: formData.title,
           StartDate: startDate.toISOString(),
           EndDate: endDate.toISOString(),
-          OwnerID: user.$id
+          OwnerID: user.$id,
+          PetID: formData.petID,
+          PetName: formData.pet
         };
     
         createEvent(newEvent); 
-        setFormData({ title: '', start: '', end: '' });
+        setFormData({ title: '', start: '', end: '', pet: '', petID: '' });
         closeModal();
       };
 
@@ -54,6 +65,12 @@ const AddEventModal = ({ closeModal }) => {
         }
     
       }
+
+      useEffect(() => {
+          if (user) {
+            fetchPets(user.$id);
+          }
+        }, [user]);
     
     return (
         <div id="modal-bg-event" className="absolute top-0 left-0 w-full h-full bg-zinc-700/50 flex flex-col justify-center items-center z-[1000]" onClick={closeModalBgClick}>
@@ -99,6 +116,21 @@ const AddEventModal = ({ closeModal }) => {
             />
           </div>
 
+          <label className="block font-bold mb-2">Pet</label>
+          <select
+            name="pet"
+            value={formData.pet}
+            onChange={handleInputChange}
+            required
+            className="m-4 p-2 border-2 border-gray-300 rounded-md w-1/2"
+          >
+            <option value="General">Evento general</option>
+            {pets.map((pet) => (
+              <option key={pet.$id} value={pet.Name}>
+                {pet.Name}
+              </option>
+            ))}
+          </select>
           <button type="submit" className="bg-green-500 text-white p-2 rounded">
             Add Event
           </button>
