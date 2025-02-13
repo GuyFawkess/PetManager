@@ -20,6 +20,7 @@ const useEventsStore = create((set) => ({
         start: new Date(doc.StartDate),
         end: new Date(doc.EndDate),
         title: doc.Title,
+        pet: doc.PetName
       }))
 
       set({ events: formattedEvents, loading: false });
@@ -49,6 +50,7 @@ const useEventsStore = create((set) => ({
         end: new Date(response.EndDate),
         title: response.Title,
         OwnerID: userID,
+        pet: response.PetName
       };
 
       set((state) => ({
