@@ -8,6 +8,7 @@ import Home from './pages/Home'
 import Profile from './pages/Profile'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import Pets from './pages/Pets'
 import MyCalendar from './pages/Calendar'
 import CardSmall from './components/CardSmall'
 import AddEventModal from './components/AddEventModal'
@@ -29,6 +30,7 @@ function App() {
 
           <Route element={<PrivateRoutes />}>
             <Route path="/" element={<Home />} />
+            <Route path="/pets" element={<Pets />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/calendar" element={<MyCalendar />} />
           </Route>

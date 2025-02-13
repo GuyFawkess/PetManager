@@ -73,7 +73,7 @@ const AddEventModal = ({ closeModal }) => {
         }, [user]);
     
     return (
-        <div id="modal-bg-event" className="absolute top-0 left-0 w-full h-full bg-zinc-700/50 flex flex-col justify-center items-center z-[1000]" onClick={closeModalBgClick}>
+        <div id="modal-bg-event" className="fixed inset-0 min-h-screen bg-zinc-700/50 flex justify-center items-center z-[1000]" onClick={closeModalBgClick}>
             <div className="bg-gray-50 p-4 m-4 rounded-lg w-10/12 max-w-screen-md md:w-7/12 shadow-2xl relative">
             <a onClick={closeModal} className="absolute right-5 text-2xl hover:cursor-pointer">X</a>
             <h1 className=" text-center text-4xl py-8 font-bold">Add an Event</h1>
