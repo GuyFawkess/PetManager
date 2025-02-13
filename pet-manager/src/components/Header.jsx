@@ -19,6 +19,7 @@ const Header = () => {
                     <>
                         <Link to="/" className="header--link">Home</Link>
                         <Link to="/profile" className="header--link">Profile</Link>
+                        <Link to="/pets" className="header--link">My Pets</Link>
                         <Link to="/calendar" className="header--link">Calendar</Link>
 
                         <button onClick={logoutUser} className="btn">Logout</button>

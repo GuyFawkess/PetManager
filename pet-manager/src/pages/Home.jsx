@@ -1,69 +1,97 @@
 import React, { useState, useEffect } from "react";
-import usePetsStore from "../store/usePetsStore";
-import AddPetModal from "../components/AddPetModal";
-import Button from "../components/Button";
 import { useAuth } from "../store/AuthContext";
+import useEventsStore from "../store/useEventsStore";
+import usePetsStore from "../store/usePetsStore";
+import dayjs from "dayjs";
 
 const Home = () => {
-  const { pets, fetchPets, loading, removePet } = usePetsStore();
-  const [showModal, setShowModal] = useState(false);
   const { user } = useAuth();
-
-  const openModal = () => {
-    console.log("Opening modal");
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    console.log("Closing modal");
-    setShowModal(false);
-  }
+  const { events, fetchEvents } = useEventsStore();
+  const { pets, fetchPets } = usePetsStore(); 
+  const [filteredEvents, setFilteredEvents] = useState([]);
+  const [showUpcoming, setShowUpcoming] = useState(true);
 
   useEffect(() => {
     if (user) {
+      fetchEvents(user.$id);
       fetchPets(user.$id);
     }
   }, [user]);
 
-  return (
-    <div className="container mx-auto p-4 text-2xl">
-      <h1 className="font-bold mb-4 text-3xl text-red-500">Welcome {user.name}</h1>
-      {/* Pet List */}
-      {loading ? (
-        <div className="flex justify-center items-center h-screen">
-          <span className="loading loading-spinner loading-xl"></span>
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-5">
-          {pets.map((pet) => (
-            <div key={pet.$id} className="card bg-base-100 w-80 h-110 shadow-md">
-              <figure>
-                <img
-                  src={pet.image || "https://picsum.photos/id/237/300/400"}
-                  alt={pet.Name}
-                  className="h-auto w-full object-cover"
-                />
-              </figure>
-              <div className="card-body">
-                <h2 className="card-title">{pet.Name}</h2>
-                <p>Type: {pet.Type}</p>
-                <div className="card-actions justify-end">
-                  <button
-                    onClick={() => removePet(pet.$id)}
-                    className="btn btn-error "
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+  useEffect(() => {
+    const today = dayjs().startOf("day");
 
-        </div>
-      )
-      }
-      <Button handleClick={openModal} text="Add Pet" />
-      {showModal && <AddPetModal closeModal={closeModal} />}
+    let updatedEvents = events;
+    if (showUpcoming) {
+      updatedEvents = events.filter(
+        (event) => dayjs(event.start).isAfter(today) || dayjs(event.start).isSame(today)
+      );
+    }
+
+    updatedEvents = updatedEvents.sort((a, b) => new Date(a.start) - new Date(b.start));
+    setFilteredEvents(updatedEvents);
+  }, [events, showUpcoming]);
+
+  return (
+    <div className="container mx-auto p-4 text-2xl flex flex-col items-center">
+      <h1 className="font-bold mb-4 text-3xl text-red-500">
+        Welcome {user?.name || "Guest"}
+      </h1>
+
+      {/* Toggle Button */}
+      <button
+        onClick={() => setShowUpcoming(!showUpcoming)}
+        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition"
+      >
+        {showUpcoming ? "Show All Events" : "Show Upcoming Events"}
+      </button>
+
+      <h2 className="font-bold text-xl mt-4">
+        {showUpcoming ? "Upcoming Events:" : "All Events:"}
+      </h2>
+
+      {filteredEvents.length === 0 ? (
+        <p>No events available.</p>
+      ) : (
+        <ul className="list bg-base-100 rounded-box shadow-md w-1/2">
+          {filteredEvents.map((event) => {
+              // Relacionamos el evento con el pet para buscar la info
+            const eventPet = pets?.find((p) => p.id === event.PetID);
+            return (
+              <li key={event.id} className="list-row h-20 flex items-center">
+                <div className="text-4xl font-thin opacity-30 tabular-nums w-[7rem]">
+                  {dayjs(event.start).format("DD/MM")}
+                </div>
+                <div className="flex items-center">
+                  <img
+                    className="size-10 rounded-box"
+                    alt={event.pet || "Unknown Pet"}
+                    src={eventPet?.image || "https://picsum.photos/id/237/300/400"}
+                  />
+                </div>
+                <div className="list-col-grow">
+                  <div>{event.title}</div>
+                  <div className="text-xs uppercase font-semibold opacity-60">
+                    {event.pet ? `With ${event.pet}` : "No Pet Assigned"}
+                  </div>
+                </div>
+                {/* cambiar boton aqui que te lleve al calendario o borrar notificacion */}
+                <button className="btn btn-square btn-ghost ml-auto"> 
+                  <svg
+                    className="size-[1.2em]"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                  >
+                    <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor">
+                      <path d="M6 3L20 12 6 21 6 3z"></path>
+                    </g>
+                  </svg>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </div>
   );
 };
