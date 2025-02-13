@@ -7,9 +7,10 @@ import dayjs from "dayjs";
 const Home = () => {
   const { user } = useAuth();
   const { events, fetchEvents } = useEventsStore();
-  const { pets, fetchPets } = usePetsStore(); 
+  const { pets, fetchPets } = usePetsStore();
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [showUpcoming, setShowUpcoming] = useState(true);
+  const [activeTab, setActiveTab] = useState("upcoming");	
 
   useEffect(() => {
     if (user) {
@@ -39,23 +40,54 @@ const Home = () => {
       </h1>
 
       {/* Toggle Button */}
-      <button
+      <div className="flex overflow-x-auto items-center p-1 space-x-1 rtl:space-x-reverse text-sm text-gray-600 bg-gray-500/5 rounded-xl dark:bg-gray-500/20">
+        <button
+          role="tab"
+          type="button"
+          className={`flex whitespace-nowrap items-center h-8 px-5 font-medium rounded-lg outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-inset shadow ${activeTab === "upcoming"
+              ? "text-yellow-600 bg-white dark:text-white dark:bg-yellow-600"
+              : "hover:text-gray-800 focus:text-yellow-600 dark:text-gray-400 dark:hover:text-gray-300 dark:focus:text-gray-400"
+            }`}
+          onClick={() =>{
+            setActiveTab("upcoming");
+            setShowUpcoming(!showUpcoming)}
+          } 
+        >
+          Upcoming
+        </button>
+
+        <button
+          role="tab"
+          type="button"
+          className={`flex whitespace-nowrap items-center h-8 px-5 font-medium rounded-lg outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-inset shadow ${activeTab === "allEvents"
+              ? "text-yellow-600 bg-white dark:text-white dark:bg-yellow-600"
+              : "hover:text-gray-800 focus:text-yellow-600 dark:text-gray-400 dark:hover:text-gray-300 dark:focus:text-gray-400"
+            }`}
+          onClick={() => {
+            setActiveTab("allEvents");
+            setShowUpcoming(!showUpcoming)}}
+        >
+          All Events
+        </button>
+      </div>
+      {/* <button
         onClick={() => setShowUpcoming(!showUpcoming)}
         className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition"
       >
         {showUpcoming ? "Show All Events" : "Show Upcoming Events"}
-      </button>
+      </button> */}
 
-      <h2 className="font-bold text-xl mt-4">
+      {/* <h2 className="font-bold text-xl mt-4">
         {showUpcoming ? "Upcoming Events:" : "All Events:"}
-      </h2>
+      </h2> */}
 
       {filteredEvents.length === 0 ? (
         <p>No events available.</p>
       ) : (
         <ul className="list bg-base-100 rounded-box shadow-md w-1/2">
+          <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">{showUpcoming ? "Upcoming Events:" : "All Events:"}</li>
           {filteredEvents.map((event) => {
-              // Relacionamos el evento con el pet para buscar la info
+            // Relacionamos el evento con el pet para buscar la info
             const eventPet = pets?.find((p) => p.id === event.PetID);
             return (
               <li key={event.id} className="list-row h-20 flex items-center">
@@ -76,7 +108,7 @@ const Home = () => {
                   </div>
                 </div>
                 {/* cambiar boton aqui que te lleve al calendario o borrar notificacion */}
-                <button className="btn btn-square btn-ghost ml-auto"> 
+                <button className="btn btn-square btn-ghost ml-auto">
                   <svg
                     className="size-[1.2em]"
                     xmlns="http://www.w3.org/2000/svg"

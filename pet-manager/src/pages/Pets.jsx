@@ -34,7 +34,7 @@ const Pets = () => {
           <span className="loading loading-spinner loading-xl"></span>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-5">
           {pets.map((pet) => (
             <div key={pet.$id} className="card bg-base-100 w-80 h-110 shadow-md">
               <figure>
