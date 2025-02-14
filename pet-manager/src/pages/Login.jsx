@@ -26,8 +26,10 @@ const Login = () => {
 
 
   return (
-    <div className="max-w-10/12 m-auto p-[2rem]">
-      <div className="max-w-[600px] m-auto">
+    // HAY QUE MIRAR COMO HACER LA IMAGEN SI SOBRE PONERLA O HACERLA RESPONSIVE PERO HAY QUE MIRARLO
+    <div className="h-screen max-h-120 flex items-center  bg-[url('/src/assets/fish_bowl.svg')] 
+    bg-no-repeat bg-[length:50%] bg-[position:right_top]">
+      <div className='ml-100'>
         <form ref={loginForm} onSubmit={handleSubmit}>
 
           <div className="mx-0 my-[1em]">

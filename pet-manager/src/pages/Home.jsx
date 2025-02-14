@@ -3,14 +3,17 @@ import { useAuth } from "../store/AuthContext";
 import useEventsStore from "../store/useEventsStore";
 import usePetsStore from "../store/usePetsStore";
 import dayjs from "dayjs";
+import ConfirmationModal from '../components/ConfirmationModal';
 
 const Home = () => {
   const { user } = useAuth();
-  const { events, fetchEvents } = useEventsStore();
+  const { events, loading, fetchEvents, removeEvent } = useEventsStore();
   const { pets, fetchPets } = usePetsStore();
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [showUpcoming, setShowUpcoming] = useState(true);
-  const [activeTab, setActiveTab] = useState("upcoming");	
+  const [activeTab, setActiveTab] = useState("upcoming");
+  const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -33,25 +36,53 @@ const Home = () => {
     setFilteredEvents(updatedEvents);
   }, [events, showUpcoming]);
 
+
+  const handleDeleteClick = (event) => {
+    setEventToDelete(event);
+    setIsConfirmVisible(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await removeEvent(eventToDelete.id)
+      fetchEvents(user.$id); // Fetch the updated events list
+      setEventToDelete(null);
+      setIsConfirmVisible(false);
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
+  }
+
+  const cancelDelete = () => {
+    setEventToDelete(null);
+    setIsConfirmVisible(false);
+  };
+
+  const randomNumber = Math.floor(Math.random() * 237);
+
   return (
-    <div className="container mx-auto p-4 text-2xl flex flex-col items-center">
+    <main className="bg-[url('/src/assets/undraw_cat_lqdj.svg'),url('/src/assets/undraw_dog_jfxm.svg')] 
+  bg-no-repeat bg-[length:30%,40%] bg-[position:left_center,right_center] min-h-fit">
+    <div className="mx-auto p-4 text-2xl flex flex-col items-center">
+      
       <h1 className="font-bold mb-4 text-3xl text-red-500">
         Welcome {user?.name || "Guest"}
       </h1>
 
       {/* Toggle Button */}
-      <div className="flex overflow-x-auto items-center p-1 space-x-1 rtl:space-x-reverse text-sm text-gray-600 bg-gray-500/5 rounded-xl dark:bg-gray-500/20">
+      <div className="flex overflow-x-auto items-center p-1 space-x-1 rtl:space-x-reverse text-sm text-gray-600 bg-gray-500/5 rounded-xl dark:bg-gray-100">
         <button
           role="tab"
           type="button"
           className={`flex whitespace-nowrap items-center h-8 px-5 font-medium rounded-lg outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-inset shadow ${activeTab === "upcoming"
-              ? "text-yellow-600 bg-white dark:text-white dark:bg-yellow-600"
-              : "hover:text-gray-800 focus:text-yellow-600 dark:text-gray-400 dark:hover:text-gray-300 dark:focus:text-gray-400"
+            ? "text-yellow-600 bg-white dark:text-white dark:bg-yellow-600"
+            : "hover:text-black-800 focus:text-yellow-600 dark:text-gray-400 dark:hover:text-gray-800 dark:focus:text-gray-400"
             }`}
-          onClick={() =>{
+          onClick={() => {
             setActiveTab("upcoming");
-            setShowUpcoming(!showUpcoming)}
-          } 
+            setShowUpcoming(!showUpcoming)
+          }
+          }
         >
           Upcoming
         </button>
@@ -60,26 +91,17 @@ const Home = () => {
           role="tab"
           type="button"
           className={`flex whitespace-nowrap items-center h-8 px-5 font-medium rounded-lg outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-inset shadow ${activeTab === "allEvents"
-              ? "text-yellow-600 bg-white dark:text-white dark:bg-yellow-600"
-              : "hover:text-gray-800 focus:text-yellow-600 dark:text-gray-400 dark:hover:text-gray-300 dark:focus:text-gray-400"
+            ? "text-yellow-600 bg-white dark:text-white dark:bg-yellow-600"
+            : "hover:text-gray-800 focus:text-yellow-600 dark:text-gray-400 dark:hover:text-gray-800 dark:focus:text-gray-400"
             }`}
           onClick={() => {
             setActiveTab("allEvents");
-            setShowUpcoming(!showUpcoming)}}
+            setShowUpcoming(!showUpcoming)
+          }}
         >
           All Events
         </button>
       </div>
-      {/* <button
-        onClick={() => setShowUpcoming(!showUpcoming)}
-        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 transition"
-      >
-        {showUpcoming ? "Show All Events" : "Show Upcoming Events"}
-      </button> */}
-
-      {/* <h2 className="font-bold text-xl mt-4">
-        {showUpcoming ? "Upcoming Events:" : "All Events:"}
-      </h2> */}
 
       {filteredEvents.length === 0 ? (
         <p>No events available.</p>
@@ -98,7 +120,7 @@ const Home = () => {
                   <img
                     className="size-10 rounded-box"
                     alt={event.pet || "Unknown Pet"}
-                    src={eventPet?.image || "https://picsum.photos/id/237/300/400"}
+                    src={eventPet?.image || `https://picsum.photos/id/${randomNumber}/300/400`}
                   />
                 </div>
                 <div className="list-col-grow">
@@ -108,7 +130,7 @@ const Home = () => {
                   </div>
                 </div>
                 {/* cambiar boton aqui que te lleve al calendario o borrar notificacion */}
-                <button className="btn btn-square btn-ghost ml-auto">
+                <button className="btn btn-ghost ml-auto dropdown dropdown-right dropdown-center">
                   <svg
                     className="size-[1.2em]"
                     xmlns="http://www.w3.org/2000/svg"
@@ -118,13 +140,24 @@ const Home = () => {
                       <path d="M6 3L20 12 6 21 6 3z"></path>
                     </g>
                   </svg>
+                  <ul tabIndex={0} className="mx-4 dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                    <li><a>Edit</a></li>
+                    <li><a onClick={() => handleDeleteClick(event)} className="hover:bg-red-700 hover:text-white">Delete</a></li>
+                  </ul>
                 </button>
               </li>
             );
           })}
         </ul>
       )}
+       <ConfirmationModal
+        show={isConfirmVisible}
+        onConfirm={confirmDelete}
+        onCancel={cancelDelete}
+        message={`Are you sure you want to delete "${eventToDelete?.title}"?`}
+      />
     </div>
+    </main>
   );
 };
 

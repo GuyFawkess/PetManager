@@ -5,7 +5,7 @@ const Button = ({text, handleClick}) => {
     <>
       <button 
       onClick={handleClick}
-      className="px-2 py-1 my-6 bg-orange-400 text-white text-lg rounded-md">
+      className="px-2 py-1 my-2 bg-orange-400 text-white text-lg rounded-md">
         {text}
       </button>
     
