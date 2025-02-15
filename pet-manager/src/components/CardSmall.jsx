@@ -7,7 +7,7 @@ client.setEndpoint('https://cloud.appwrite.io/v1').setProject(PROJECT_ID);
 
 const storage = new Storage(client);
 
-const Card = () => {
+const CardSmall = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [imageUrl, setImageUrl] = useState("https://upload.wikimedia.org/wikipedia/commons/0/0a/Paw_%28Animal_Rights_symbol%29.png");
 
@@ -95,4 +95,5 @@ const Card = () => {
     );
 };
 
-export default Card;
+export default CardSmall;
+

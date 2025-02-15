@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import usePetsStore from "../store/usePetsStore";
 import { useAuth } from "../store/AuthContext";
-import Button from "./Button";
 
 
-const AddPetModal = ({closeModal}) => {
-  const { createPet } = usePetsStore(); // Use createPet instead of addPet
-  const { user } = useAuth(); // Assuming user object has ID
+const AddPetModal = ({ closeModal }) => {
+  const { createPet } = usePetsStore();
+  const { user } = useAuth();
   const [petData, setPetData] = useState({ Name: "", Type: "" });
 
   const handleInputChange = (e) => {
@@ -17,24 +16,24 @@ const AddPetModal = ({closeModal}) => {
     e.preventDefault();
     if (!user) return alert("You must be logged in to add a pet.");
 
-    await createPet(petData, user.$id); // Use createPet here
-    setPetData({ Name: "", Type: "" }); // Reset form
-    closeModal(); // Close modal
+    await createPet(petData, user.$id);
+    setPetData({ Name: "", Type: "" });
+    closeModal();
   };
 
   const closeModalBgClick = (e) => {
     if (e.target.id === "modal-bg") {
       closeModal();
     }
-      
+
   }
 
   return (
-    <div id="modal-bg" className="absolute top-0 left-0 w-full h-full bg-zinc-700/50 flex flex-col justify-center items-center" onClick={closeModalBgClick}>
+    <div id="modal-bg" className="fixed inset-0 min-h-screen bg-zinc-700/50 flex justify-center items-center" onClick={closeModalBgClick}>
       <div className="bg-gray-50 p-4 m-4 rounded-lg w-10/12 max-w-screen-md md:w-7/12 shadow-2xl relative">
-      <a onClick={closeModal} className="absolute right-5 text-2xl hover:cursor-pointer">X</a>
-        <h1 className="text-4xl py-8 font-bold">Add a new pet!</h1>
-        <div className="bg-orange-400 w-5/12 h-1 mx-auto mb-8"></div>
+        <a onClick={closeModal} className="absolute right-5 text-2xl hover:cursor-pointer">X</a>
+        <h1 className="text-4xl py-8 font-bold text-center">Add a new pet!</h1>
+        <div className="bg-orange-400 w-4/6 h-1 mx-auto mb-8"></div>
         <form className="px-4 my-3 max-w-3xl mx-auto space-y-3 flex flex-col justify-center items-center" onSubmit={handleSubmit}>
           <label for="Type">What kind of pet?</label>
           <select
