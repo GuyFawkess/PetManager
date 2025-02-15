@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import usePetsStore from "../store/usePetsStore";
 import { useAuth } from "../store/AuthContext";
+import { PROJECT_ID, STORAGE_ID } from "../appwriteConfig";
+import { Storage, Client, ID } from "appwrite";
 
+const client = new Client();
+client.setEndpoint('https://cloud.appwrite.io/v1').setProject(PROJECT_ID);
+const storage = new Storage(client);
 
 const AddPetModal = ({ closeModal }) => {
   const { createPet } = usePetsStore();
   const { user } = useAuth();
-  const [petData, setPetData] = useState({ Name: "", Type: "" });
+  const [petData, setPetData] = useState({ Name: "", Type: "", Pet_Image: "" });
 
   const handleInputChange = (e) => {
     setPetData({ ...petData, [e.target.name]: e.target.value });
@@ -17,7 +22,7 @@ const AddPetModal = ({ closeModal }) => {
     if (!user) return alert("You must be logged in to add a pet.");
 
     await createPet(petData, user.$id);
-    setPetData({ Name: "", Type: "" });
+    setPetData({ Name: "", Type: "", Pet_Image: "" });
     closeModal();
   };
 
@@ -25,8 +30,24 @@ const AddPetModal = ({ closeModal }) => {
     if (e.target.id === "modal-bg") {
       closeModal();
     }
+  };
 
-  }
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      try {
+        const response = await storage.createFile(STORAGE_ID, ID.unique(), file);
+
+        if (response && response.$id) {
+          const fileId = response.$id;
+          const newImageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${STORAGE_ID}/files/${fileId}/view?project=${PROJECT_ID}`;
+          setPetData({ ...petData, Pet_Image: newImageUrl });
+        }
+      } catch (error) {
+        console.error('Error al subir el archivo:', error);
+      }
+    }
+  };
 
   return (
     <div id="modal-bg" className="fixed inset-0 min-h-screen bg-zinc-700/50 flex justify-center items-center" onClick={closeModalBgClick}>
@@ -35,7 +56,7 @@ const AddPetModal = ({ closeModal }) => {
         <h1 className="text-4xl py-8 font-bold text-center">Add a new pet!</h1>
         <div className="bg-orange-400 w-4/6 h-1 mx-auto mb-8"></div>
         <form className="px-4 my-3 max-w-3xl mx-auto space-y-3 flex flex-col justify-center items-center" onSubmit={handleSubmit}>
-          <label for="Type">What kind of pet?</label>
+          <label htmlFor="Type">What kind of pet?</label>
           <select
             name="Type"
             value={petData.Type}
@@ -48,7 +69,7 @@ const AddPetModal = ({ closeModal }) => {
             <option value="Cat">Cat</option>
             <option value="Bird">Bird</option>
           </select>
-          <label for="Name">Name of your pet:</label>
+          <label htmlFor="Name">Name of your pet:</label>
           <input
             className="border border-gray-400 block py-2 px-4 w-xl rounded focus:outline-none focus:border-teal-500"
             type="text"
@@ -58,8 +79,16 @@ const AddPetModal = ({ closeModal }) => {
             onChange={handleInputChange}
             required
           />
+          <label htmlFor="Pet_Image">Image of your pet:</label>
+          <input
+            type="file"
+            id="uploader"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
           <button className="bg-green-500 w-1/4 text-lg rounded p-2 hover:cursor-cell" type="submit">
-            Add Pet</button>
+            Add Pet
+          </button>
         </form>
       </div>
     </div>
