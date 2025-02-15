@@ -36,7 +36,7 @@ const MyCalendar = () => {
     ),
     toolbar: (props) => {
       return (
-        <div className="flex justify-between items-center p-4 bg-gray-100 rounded-md">
+        <div className="flex justify-between items-center p-4 bg-warning rounded-md">
           {/* Left Side - Navigation */}
           <div className="flex gap-2">
             <button onClick={() => props.onNavigate("TODAY")} className="btn">
@@ -54,7 +54,7 @@ const MyCalendar = () => {
           </div>
 
           {/* Center - Month Label */}
-          <span className="text-lg font-bold">{props.label}</span>
+          <span className="letrasLogo text-3xl text-amber-600 drop-shadow-[1px_1.5px_1px_black]">{props.label}</span>
 
           {/* Right Side - View Selection */}
           <div className="flex gap-2">

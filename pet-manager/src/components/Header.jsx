@@ -7,7 +7,7 @@ const Header = () => {
 
     const location = useLocation();
 
-    const isActive = (path) => location.pathname === path ? "btn btn-active uppercase" : "btn btn-ghost uppercase";
+    const isActive = (path) => location.pathname === path ? "btn btn-warning uppercase" : "btn btn-ghost uppercase";
 
 
     return (
