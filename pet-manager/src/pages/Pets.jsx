@@ -42,7 +42,7 @@ const Pets = () => {
             <div key={pet.$id} className="card bg-base-100 w-70 h-90 shadow-md">
               <figure>
                 <img
-                  src={pet.image || `https://picsum.photos/id/${randomNumber}/300/400`}
+                  src={pet.Pet_Image || `https://picsum.photos/id/${randomNumber}/300/400`}
                   alt={pet.Name}
                   className="h-auto w-full object-cover"
                 />
