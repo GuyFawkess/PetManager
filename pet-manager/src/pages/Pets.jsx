@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from "react";
 import usePetsStore from "../store/usePetsStore";
 import AddPetModal from "../components/AddPetModal";
+import PetViewModal from "../components/PetViewModal"
 import Button from "../components/Button";
 import { useAuth } from "../store/AuthContext";
 
 const Pets = () => {
   const { pets, fetchPets, loading, removePet } = usePetsStore();
-  const [showModal, setShowModal] = useState(false);
+  const [showAddPetModal, setShowAddPetModal] = useState(false);
+  const [showPetViewModal, setShowPetViewModal] = useState(false);
+  const [selectedPet, setSelectedPet] = useState(null);
   const { user } = useAuth();
-
-  const openModal = () => {
-    console.log("Opening modal");
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    console.log("Closing modal");
-    setShowModal(false);
-  }
 
   useEffect(() => {
     if (user) {
@@ -28,10 +21,12 @@ const Pets = () => {
   const randomNumber = Math.floor(Math.random() * 237)
 
   return (
-    <main className="bg-[url('/src/assets/undraw_friends_xscy.svg')] 
+    <main className="min-h-full bg-[url('/src/assets/undraw_friends_xscy.svg')] 
     bg-no-repeat bg-[length:40%] bg-[position:right_center] min-h-fit">
     <div className="container mx-auto p-4 text-2xl max-w-9/12">
-      <h1 className="font-bold mb-4 text-3xl text-red-500">Welcome {user.name}</h1>
+    <h1 className="mb-3 letrasLogo text-5xl text-amber-600 drop-shadow-[1px_1px_0.5px_black]">
+        My Pets
+      </h1>
       {loading ? (
         <div className="flex justify-center items-center h-screen">
           <span className="loading loading-spinner loading-xl"></span>
@@ -52,10 +47,10 @@ const Pets = () => {
                 <p>Type: {pet.Type}</p>
                 <div className="card-actions justify-end">
                   <button
-                    onClick={() => removePet(pet.$id)}
-                    className="btn btn-error "
+                    onClick={() => {setShowPetViewModal(true); setSelectedPet(pet)}}
+                    className="btn btn-warning "
                   >
-                    Remove
+                    Details
                   </button>
                 </div>
               </div>
@@ -65,8 +60,9 @@ const Pets = () => {
         </div>
       )
       }
-      <Button handleClick={openModal} text="Add Pet" />
-      {showModal && <AddPetModal closeModal={closeModal} />}
+      <Button handleClick={() => setShowAddPetModal(true)} text="Add Pet" />
+      {showAddPetModal && <AddPetModal closeModal={() => setShowAddPetModal(false)} />}
+      {showPetViewModal && selectedPet && <PetViewModal closeModal={() => {setShowPetViewModal(false); setSelectedPet(null)}} pet={selectedPet} />}
     </div>
     </main>
   );

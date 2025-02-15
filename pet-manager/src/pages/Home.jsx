@@ -61,12 +61,12 @@ const Home = () => {
   const randomNumber = Math.floor(Math.random() * 237);
 
   return (
-    <main className="bg-[url('/src/assets/undraw_cat_lqdj.svg'),url('/src/assets/undraw_dog_jfxm.svg')] 
-  bg-no-repeat bg-[length:30%,40%] bg-[position:left_center,right_center] min-h-fit">
+    <main className="min-h-full bg-[url('/src/assets/undraw_cat_lqdj.svg'),url('/src/assets/undraw_dog_jfxm.svg')] 
+  bg-no-repeat bg-[length:30%,40%] bg-[position:left_center,right_center]">
     <div className="mx-auto p-4 text-2xl flex flex-col items-center">
-      
-      <h1 className="font-bold mb-4 text-3xl text-red-500">
-        Welcome {user?.name || "Guest"}
+    <img src="/src/assets/undraw_welcome-cats_tw36.svg" alt="Cat Icon" className="h-30 w-auto" />
+      <h1 className="letrasLogo mb-4 text-4xl text-amber-600 drop-shadow-[1px_1px_0.5px_black]">
+        {user?.name || "Guest"}
       </h1>
 
       {/* Toggle Button */}
@@ -106,7 +106,7 @@ const Home = () => {
       {filteredEvents.length === 0 ? (
         <p>No events available.</p>
       ) : (
-        <ul className="list bg-base-100 rounded-box shadow-md w-1/2">
+        <ul className="list bg-base-100 rounded-box shadow-md w-1/2 mb-4">
           <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">{showUpcoming ? "Upcoming Events:" : "All Events:"}</li>
           {filteredEvents.map((event) => {
             // Relacionamos el evento con el pet para buscar la info

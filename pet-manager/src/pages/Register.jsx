@@ -31,7 +31,7 @@ const Register = () => {
   }
 
   return (
-    <div className="m-auto p-[2rem] bg-[url('/src/assets/fish_bowl.svg')] 
+    <div className="h-full w-full m-auto p-[2rem] bg-[url('/src/assets/fish_bowl.svg')] 
     bg-no-repeat bg-[length:50%] bg-[position:right] min-h-fit">
       <div className="max-w-[600px] m-auto">
 

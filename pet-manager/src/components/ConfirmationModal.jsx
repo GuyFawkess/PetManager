@@ -8,13 +8,13 @@ const ConfirmationModal = ({ show, onConfirm, onCancel, message }) => {
           <div className="flex justify-end">
             <button 
               onClick={onCancel} 
-              className="bg-gray-300 text-black rounded px-4 py-2 mr-2"
+              className="bg-gray-300 text-black rounded px-4 py-2 mr-2 hover:cursor-pointer"
             >
               Cancel
             </button>
             <button 
               onClick={onConfirm} 
-              className="bg-red-500 text-white rounded px-4 py-2"
+              className="bg-red-500 text-white rounded px-4 py-2 hover:cursor-pointer"
             >
               Delete
             </button>
