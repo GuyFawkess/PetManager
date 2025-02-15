@@ -13,7 +13,7 @@ const Header = () => {
     return (
         <div className="flex justify-between px-4 border-b-2 border-black">
             <div>
-                <Link id="header-logo" to="/">LOGO</Link>
+                <Link id="header-logo" to="/">PetManager</Link>
             </div>
 
             {user && (
