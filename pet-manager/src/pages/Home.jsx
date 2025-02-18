@@ -4,6 +4,10 @@ import useEventsStore from "../store/useEventsStore";
 import usePetsStore from "../store/usePetsStore";
 import dayjs from "dayjs";
 import ConfirmationModal from '../components/ConfirmationModal';
+import AddEventModal from "../components/AddEventModal";
+
+import {toast, ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const Home = () => {
   const { user } = useAuth();
@@ -14,6 +18,9 @@ const Home = () => {
   const [activeTab, setActiveTab] = useState("upcoming");
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
+
+  const [editingEvent, setEditingEvent] = useState(null);
+
 
   useEffect(() => {
     if (user) {
@@ -48,6 +55,7 @@ const Home = () => {
       fetchEvents(user.$id); // Fetch the updated events list
       setEventToDelete(null);
       setIsConfirmVisible(false);
+      toast.success("Event deleted!", {position:'top-center', theme:'colored', closeOnClick: true,})
     } catch (error) {
       console.error("Error deleting event:", error);
     }
@@ -63,100 +71,109 @@ const Home = () => {
   return (
     <main className="min-h-full bg-[url('/src/assets/undraw_cat_lqdj.svg'),url('/src/assets/undraw_dog_jfxm.svg')] 
   bg-no-repeat bg-[length:30%,40%] bg-[position:left_center,right_center]">
-    <div className="mx-auto p-4 text-2xl flex flex-col items-center">
-    <img src="/src/assets/undraw_welcome-cats_tw36.svg" alt="Cat Icon" className="h-30 w-auto" />
-      <h1 className="letrasLogo mb-4 text-4xl text-amber-600 drop-shadow-[1px_1px_0.5px_black]">
-        {user?.name || "Guest"}
-      </h1>
+      <div className="mx-auto p-4 text-2xl flex flex-col items-center">
+        <img src="/src/assets/undraw_welcome-cats_tw36.svg" alt="Cat Icon" className="h-30 w-auto" />
+        <h1 className="letrasLogo mb-4 text-4xl text-amber-600 drop-shadow-[1px_1px_0.5px_black]">
+          {user?.name || "Guest"}
+        </h1>
 
-      {/* Toggle Button */}
-      <div className="flex overflow-x-auto items-center p-1 space-x-1 rtl:space-x-reverse text-sm text-gray-600 bg-gray-500/5 rounded-xl dark:bg-gray-100">
-        <button
-          role="tab"
-          type="button"
-          className={`flex whitespace-nowrap items-center h-8 px-5 font-medium rounded-lg outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-inset shadow ${activeTab === "upcoming"
-            ? "text-yellow-600 bg-white dark:text-white dark:bg-yellow-600"
-            : "hover:text-black-800 focus:text-yellow-600 dark:text-gray-400 dark:hover:text-gray-800 dark:focus:text-gray-400"
-            }`}
-          onClick={() => {
-            setActiveTab("upcoming");
-            setShowUpcoming(!showUpcoming)
-          }
-          }
-        >
-          Upcoming
-        </button>
+        {/* Toggle Button */}
+        <div className="flex overflow-x-auto items-center p-1 space-x-1 rtl:space-x-reverse text-sm text-gray-600 bg-gray-500/5 rounded-xl dark:bg-gray-100">
+          <button
+            role="tab"
+            type="button"
+            className={`flex whitespace-nowrap items-center h-8 px-5 font-medium rounded-lg outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-inset shadow ${activeTab === "upcoming"
+              ? "text-yellow-600 bg-white dark:text-white dark:bg-yellow-600"
+              : "hover:text-black-800 focus:text-yellow-600 dark:text-gray-400 dark:hover:text-gray-800 dark:focus:text-gray-400"
+              }`}
+            onClick={() => {
+              setActiveTab("upcoming");
+              setShowUpcoming(!showUpcoming)
+            }
+            }
+          >
+            Upcoming
+          </button>
 
-        <button
-          role="tab"
-          type="button"
-          className={`flex whitespace-nowrap items-center h-8 px-5 font-medium rounded-lg outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-inset shadow ${activeTab === "allEvents"
-            ? "text-yellow-600 bg-white dark:text-white dark:bg-yellow-600"
-            : "hover:text-gray-800 focus:text-yellow-600 dark:text-gray-400 dark:hover:text-gray-800 dark:focus:text-gray-400"
-            }`}
-          onClick={() => {
-            setActiveTab("allEvents");
-            setShowUpcoming(!showUpcoming)
-          }}
-        >
-          All Events
-        </button>
-      </div>
+          <button
+            role="tab"
+            type="button"
+            className={`flex whitespace-nowrap items-center h-8 px-5 font-medium rounded-lg outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-inset shadow ${activeTab === "allEvents"
+              ? "text-yellow-600 bg-white dark:text-white dark:bg-yellow-600"
+              : "hover:text-gray-800 focus:text-yellow-600 dark:text-gray-400 dark:hover:text-gray-800 dark:focus:text-gray-400"
+              }`}
+            onClick={() => {
+              setActiveTab("allEvents");
+              setShowUpcoming(!showUpcoming)
+            }}
+          >
+            All Events
+          </button>
+        </div>
 
-      {filteredEvents.length === 0 ? (
-        <p>No events available.</p>
-      ) : (
-        <ul className="list bg-base-100 rounded-box shadow-md w-1/2 mb-4">
-          <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">{showUpcoming ? "Upcoming Events:" : "All Events:"}</li>
-          {filteredEvents.map((event) => {
-            // Relacionamos el evento con el pet para buscar la info
-            const eventPet = pets?.find((p) => p.id === event.PetID);
-            return (
-              <li key={event.id} className="list-row h-20 flex items-center">
-                <div className="text-4xl font-thin opacity-30 tabular-nums w-[7rem]">
-                  {dayjs(event.start).format("DD/MM")}
-                </div>
-                <div className="flex items-center">
-                  <img
-                    className="size-10 rounded-box"
-                    alt={event.pet || "Unknown Pet"}
-                    src={eventPet?.image || `https://picsum.photos/id/${randomNumber}/300/400`}
-                  />
-                </div>
-                <div className="list-col-grow">
-                  <div>{event.title}</div>
-                  <div className="text-xs uppercase font-semibold opacity-60">
-                    {event.pet ? `With ${event.pet}` : "No Pet Assigned"}
+        {filteredEvents.length === 0 ? (
+          <p>No events available.</p>
+        ) : (
+          <ul className="list bg-base-100 rounded-box shadow-md w-1/2 mb-4">
+            <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">{showUpcoming ? "Upcoming Events:" : "All Events:"}</li>
+
+            {filteredEvents.map((event) => {
+              // Relacionamos el evento con el pet para buscar la info
+              const eventPet = pets?.find((p) => p.Name === event.pet);
+              return (
+                <li key={event.id} className="list-row h-20 flex items-center">
+                  <div className="text-4xl font-thin opacity-30 tabular-nums w-[7rem]">
+                    {dayjs(event.start).format("DD/MM")}
                   </div>
-                </div>
-                {/* cambiar boton aqui que te lleve al calendario o borrar notificacion */}
-                <button className="btn btn-ghost ml-auto dropdown dropdown-right dropdown-center">
-                  <svg
-                    className="size-[1.2em]"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                  >
-                    <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor">
-                      <path d="M6 3L20 12 6 21 6 3z"></path>
-                    </g>
-                  </svg>
-                  <ul tabIndex={0} className="mx-4 dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                    <li><a>Edit</a></li>
-                    <li><a onClick={() => handleDeleteClick(event)} className="hover:bg-red-700 hover:text-white">Delete</a></li>
-                  </ul>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-       <ConfirmationModal
-        show={isConfirmVisible}
-        onConfirm={confirmDelete}
-        onCancel={cancelDelete}
-        message={`Are you sure you want to delete "${eventToDelete?.title}"?`}
-      />
-    </div>
+                  <div className="flex items-center">
+                    <img
+                      className="size-10 rounded-box"
+                      alt={event.pet || "Unknown Pet"}
+                      src={eventPet?.Pet_Image || `https://picsum.photos/id/${randomNumber}/300/400`}
+                    />
+                  </div>
+                  <div className="list-col-grow">
+                    <div>{event.title}</div>
+                    <div className="text-xs uppercase font-semibold opacity-60">
+                      {event.pet ? `With ${event.pet}` : "No Pet Assigned"}
+                    </div>
+                  </div>
+                  {/* cambiar boton aqui que te lleve al calendario o borrar notificacion */}
+                  <button className="btn btn-ghost ml-auto dropdown dropdown-right dropdown-center">
+                    <svg
+                      className="size-[1.2em]"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                    >
+                      <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor">
+                        <path d="M6 3L20 12 6 21 6 3z"></path>
+                      </g>
+                    </svg>
+                    <ul tabIndex={0} className="mx-4 dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                      <li><a onClick={() => setEditingEvent(event)}>Edit</a></li>
+                      <li><a onClick={() => handleDeleteClick(event)} className="hover:bg-red-700 hover:text-white">Delete</a></li>
+                    </ul>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        {editingEvent && (
+          <AddEventModal
+            closeModal={() => setEditingEvent(null)}
+            initialData={editingEvent}
+          />
+        )}
+
+        <ConfirmationModal
+          show={isConfirmVisible}
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
+          message={`Are you sure you want to delete "${eventToDelete?.title}"?`}
+        />
+      </div>
+      <ToastContainer />
     </main>
   );
 };

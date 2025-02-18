@@ -3,18 +3,21 @@ import useEventsStore from "../store/useEventsStore";
 import usePetsStore from "../store/usePetsStore";
 import { useAuth } from "../store/AuthContext";
 
-const AddEventModal = ({ closeModal }) => {
+const AddEventModal = ({ closeModal, initialData = null }) => {
 
-    const { createEvent } = useEventsStore();
+    const { createEvent, updateEvent } = useEventsStore();
     const { pets, fetchPets, loading } = usePetsStore();
     const { user } = useAuth();
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState(initialData || {
         title: '',
         start: '',
         end: '',
         pet: '',
         petID: ''
     });
+
+    const date = new Date("Wed Feb 19 2025 15:17:00 GMT+0000");
+    const formattedDate = date.toISOString().slice(0, 16); // "2025-02-19T15:17"
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -25,27 +28,23 @@ const AddEventModal = ({ closeModal }) => {
         }
       };
 
-      const handleFormSubmit = (e) => {
+      const handleFormSubmit = async (e) => {
         e.preventDefault();
-
-    
-        // Validate form fields
+      
         if (!formData.title || !formData.start || !formData.end) {
           alert('Please fill all the fields');
           return;
         }
-    
-        // Validate date inputs
+      
         const startDate = new Date(formData.start);
         const endDate = new Date(formData.end);
-    
+      
         if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-          alert('Invalid date format. Please check the start and end dates.');
+          alert('Invalid date format.');
           return;
         }
-    
-        // Create new event
-        const newEvent = {
+      
+        const eventData = {
           Title: formData.title,
           StartDate: startDate.toISOString(),
           EndDate: endDate.toISOString(),
@@ -53,11 +52,17 @@ const AddEventModal = ({ closeModal }) => {
           PetID: formData.petID,
           PetName: formData.pet
         };
-    
-        createEvent(newEvent); 
+      
+        if (initialData) {
+          await updateEvent(initialData.id, eventData);
+        } else {
+          await createEvent(eventData);
+        }
+      
         setFormData({ title: '', start: '', end: '', pet: '', petID: '' });
         closeModal();
       };
+      
 
       const closeModalBgClick = (e) => {
         if (e.target.id === "modal-bg-event") {

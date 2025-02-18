@@ -63,6 +63,40 @@ const useEventsStore = create((set) => ({
     }
   },
 
+
+  // Action: Update an event
+updateEvent: async (eventID, updatedData) => {
+  set({ loading: true });
+
+  try {
+    const response = await database.updateDocument(
+      DATABASE_ID,
+      COLLECTION_ID_EVENTS,
+      eventID,
+      updatedData
+    );
+
+    // Convert and update the event in the store
+    set((state) => ({
+      events: state.events.map((event) =>
+        event.id === eventID
+          ? {
+              ...event,
+              title: response.Title,
+              start: new Date(response.StartDate),
+              end: new Date(response.EndDate),
+              pet: response.PetName,
+            }
+          : event
+      ),
+      loading: false,
+    }));
+  } catch (error) {
+    console.error('Error updating event:', error);
+    set({ loading: false });
+  }
+},
+
   // Action: Remove an event by ID
   removeEvent: async (id) => {
     set({ loading: true });
