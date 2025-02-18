@@ -1,27 +1,28 @@
 import React, { useState } from "react";
 import usePetsStore from "../store/usePetsStore";
 import { useAuth } from "../store/AuthContext";
-import { PROJECT_ID, STORAGE_ID } from "../appwriteConfig";
-import { Storage, Client, ID } from "appwrite";
-
-const client = new Client();
-client.setEndpoint('https://cloud.appwrite.io/v1').setProject(PROJECT_ID);
-const storage = new Storage(client);
 
 const AddPetModal = ({ closeModal }) => {
   const { createPet } = usePetsStore();
   const { user } = useAuth();
   const [petData, setPetData] = useState({ Name: "", Type: "", Pet_Image: "" });
-
+  const [selectedFile, setSelectedFile] = useState(null)
+  
   const handleInputChange = (e) => {
     setPetData({ ...petData, [e.target.name]: e.target.value });
   };
-
+  
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file); // Store the file for later use
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) return alert("You must be logged in to add a pet.");
 
-    await createPet(petData, user.$id);
+    await createPet(petData, user.$id, selectedFile);
     setPetData({ Name: "", Type: "", Pet_Image: "" });
     closeModal();
   };
@@ -32,22 +33,7 @@ const AddPetModal = ({ closeModal }) => {
     }
   };
 
-  const handleFileChange = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      try {
-        const response = await storage.createFile(STORAGE_ID, ID.unique(), file);
-
-        if (response && response.$id) {
-          const fileId = response.$id;
-          const newImageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${STORAGE_ID}/files/${fileId}/view?project=${PROJECT_ID}`;
-          setPetData({ ...petData, Pet_Image: newImageUrl });
-        }
-      } catch (error) {
-        console.error('Error al subir el archivo:', error);
-      }
-    }
-  };
+  
 
   return (
     <div id="modal-bg" className="fixed inset-0 min-h-screen bg-zinc-700/50 flex justify-center items-center" onClick={closeModalBgClick}>

@@ -39,7 +39,7 @@ const Pets = () => {
                 <img
                   src={pet.Pet_Image || `https://picsum.photos/id/${randomNumber}/300/400`}
                   alt={pet.Name}
-                  className="h-auto w-full object-cover"
+                  className="min-h-50 w-full object-cover"
                 />
               </figure>
               <div className="card-body">
