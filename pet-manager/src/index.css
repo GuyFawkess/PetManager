@@ -16,3 +16,7 @@
 .letrasLogo {
   font-family: 'Oleo Script', cursive;
 }
+
+.Toastify__toast {
+  text-align: center !important;
+}

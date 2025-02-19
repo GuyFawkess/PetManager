@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { DATABASE_ID, COLLECTION_ID_EVENTS, database } from '../appwriteConfig';
 import { ID, Query } from 'appwrite';
 
+import { toast, Bounce } from 'react-toastify';
+
 // Zustand store for managing events
 const useEventsStore = create((set) => ({
   events: [], // State: List of events
@@ -27,6 +29,7 @@ const useEventsStore = create((set) => ({
 
     } catch (error) {
       console.log('Error fetching events:', error);
+      toast.error("Error Fetching the Events", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
       set({ loading: false });
     }
   },
@@ -59,6 +62,7 @@ const useEventsStore = create((set) => ({
       }));
     } catch (error) {
       console.log('Error creating event:', error);
+      toast.error("Error creating event", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
       set({ loading: false });
     }
   },
@@ -92,6 +96,7 @@ updateEvent: async (eventID, updatedData) => {
       loading: false,
     }));
   } catch (error) {
+    toast.error("Error updating event", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
     console.error('Error updating event:', error);
     set({ loading: false });
   }
@@ -110,6 +115,7 @@ updateEvent: async (eventID, updatedData) => {
         loading: false,
       }));
     } catch (error) {
+      toast.error("Error deleting event", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
       console.log('Error removing event:', error);
       set({ loading: false });
     }

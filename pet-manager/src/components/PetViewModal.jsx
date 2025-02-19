@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import usePetsStore from "../store/usePetsStore";
 import { useAuth } from "../store/AuthContext";
 import ConfirmationModal from '../components/ConfirmationModal';
+import { toast, Flip, Bounce } from "react-toastify";
 
 
 const PetViewModal = ({ closeModal, pet }) => {
@@ -49,7 +50,9 @@ const PetViewModal = ({ closeModal, pet }) => {
             setPetToDelete(null);
             setIsConfirmVisible(false);
             closeModal()
+            toast.warning("Pet Deleted!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true})
         } catch (error) {
+            toast.error("Error deleting the pet", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
             console.error("Error deleting event:", error);
         }
     }

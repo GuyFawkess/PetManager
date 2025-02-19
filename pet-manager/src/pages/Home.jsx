@@ -6,8 +6,7 @@ import dayjs from "dayjs";
 import ConfirmationModal from '../components/ConfirmationModal';
 import AddEventModal from "../components/AddEventModal";
 
-import {toast, ToastContainer} from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { Bounce, Flip, toast } from "react-toastify";
 
 const Home = () => {
   const { user } = useAuth();
@@ -55,9 +54,10 @@ const Home = () => {
       fetchEvents(user.$id); // Fetch the updated events list
       setEventToDelete(null);
       setIsConfirmVisible(false);
-      toast.success("Event deleted!", {position:'top-center', theme:'colored', closeOnClick: true,})
+      toast.warning("Event deleted!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true})
     } catch (error) {
       console.error("Error deleting event:", error);
+      toast.error("Error deleting event", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
     }
   }
 
@@ -173,7 +173,7 @@ const Home = () => {
           message={`Are you sure you want to delete "${eventToDelete?.title}"?`}
         />
       </div>
-      <ToastContainer />
+     
     </main>
   );
 };
