@@ -13,7 +13,7 @@ const Header = () => {
     return (
         <div className="flex justify-between px-4 border-b-2 border-black">
             <div>
-                <Link id="header-logo" className='drop-shadow-[3px_3px_1.5px_orange] to="/">PetManager</Link>
+                <Link id="header-logo" className='drop-shadow-[3px_3px_1.5px_orange]' to="/">PetManager</Link>
             </div>
 
             {user && (

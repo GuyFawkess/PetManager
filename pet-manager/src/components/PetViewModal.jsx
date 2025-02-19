@@ -36,12 +36,14 @@ const PetViewModal = ({ closeModal, pet }) => {
     }
 
     const handleDeleteClick = (pet) => {
+        console.log("Deleting pet:", pet)
         setPetToDelete(pet);
         setIsConfirmVisible(true);
     };
 
     const confirmDelete = async () => {
         try {
+            console.log("Trying to delete", petToDelete.$id)
             await removePet(petToDelete.$id)
             fetchPets(user.$id); // Fetch the updated events list
             setPetToDelete(null);
