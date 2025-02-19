@@ -10,6 +10,8 @@ import dayjs from 'dayjs';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../App.css';
 
+import { toast, Bounce, Flip } from 'react-toastify';
+
 const localizer = dayjsLocalizer(dayjs);
 
 const MyCalendar = () => {
@@ -18,6 +20,10 @@ const MyCalendar = () => {
   const [showModal, setShowModal] = useState(false);
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
+
+  const [selectedView,  setSelectedView] = useState('month');
+
+ 
 
   const components = {
     event: (props) => (
@@ -35,6 +41,12 @@ const MyCalendar = () => {
       </div>
     ),
     toolbar: (props) => {
+
+      const handleViewChange = (view) => {
+        setSelectedView(view);
+        props.onView(view);
+      }
+    
       return (
         <div className="flex justify-between items-center p-4 bg-warning rounded-md">
           {/* Left Side - Navigation */}
@@ -58,18 +70,14 @@ const MyCalendar = () => {
 
           {/* Right Side - View Selection */}
           <div className="flex gap-2">
-            <button onClick={() => props.onView("month")} className="btn">
-              Month
-            </button>
-            <button onClick={() => props.onView("week")} className="btn">
-              Week
-            </button>
-            <button onClick={() => props.onView("day")} className="btn">
-              Day
-            </button>
-            <button onClick={() => props.onView("agenda")} className="btn">
-              Agenda
-            </button>
+            {["month", "week", "day", "agenda"].map((view) => (
+              <button
+              key={view}
+              onClick={() => handleViewChange(view)}
+              className={`btn ${selectedView === view ? "bg-blue-500 text-white" : ""}`}>
+                {view.charAt(0).toUpperCase() + view.slice(1)}
+              </button>
+            ))}
           </div>
         </div>
       );
@@ -103,7 +111,9 @@ const MyCalendar = () => {
       fetchEvents(user.$id); // Fetch the updated events list
       setEventToDelete(null);
       setIsConfirmVisible(false);
+      toast.warning("Event deleted!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true})
     } catch (error) {
+      toast.error("Error deleting event", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
       console.error("Error deleting event:", error);
     }
   }
@@ -112,6 +122,8 @@ const MyCalendar = () => {
     setEventToDelete(null);
     setIsConfirmVisible(false);
   };
+  
+
 
   return (
     

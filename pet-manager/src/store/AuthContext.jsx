@@ -2,6 +2,8 @@ import { useContext, useState, useEffect, createContext } from "react";
 import { account } from "../appwriteConfig";
 import { ID } from "appwrite";
 
+import { toast, Zoom, Bounce } from "react-toastify";
+
 
 const AuthContext = createContext();
 
@@ -26,8 +28,11 @@ export const AuthProvider = ({ children }) => {
             )
             let accountDetails = await account.get();
             setUser(accountDetails);
+            toast("Welcome Back! <3", {position:'top-center', theme:'colored', closeOnClick: true, transition: Zoom, autoClose: 2000, hideProgressBar: true, theme: "dark"})
 
         } catch (error) {
+            toast.error("Error logging in!", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce, className: "text-center"})
+      set({ loading: false });
             console.log("Login error:", error.message);
         }
 
@@ -39,8 +44,12 @@ export const AuthProvider = ({ children }) => {
         try {
             await account.deleteSession("current");
             setUser(null);
+            toast("We will miss you!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Zoom, autoClose: 2000, hideProgressBar: true, theme: "dark"})
+            
         } catch (error) {
             console.log("Logout error:", error.message);
+            toast.error("Error logging out", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
+      set({ loading: false });
         }
         setLoading(false);
     };
@@ -64,8 +73,11 @@ export const AuthProvider = ({ children }) => {
             )
             let accountDetails = await account.get();
             setUser(accountDetails);
+            toast.success("Account created!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true})
 
         } catch (error) {
+            toast.error("Error regestering!", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
+      set({ loading: false });
             console.log("Registration error:", error.message);
         }
 
@@ -78,6 +90,8 @@ export const AuthProvider = ({ children }) => {
             let accountDetails = await account.get();
             setUser(accountDetails);
         } catch (error) {
+            toast.error("User is not logged in", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
+      set({ loading: false });
             console.log("User is not logged in:", error.message);
             setUser(null);
         }

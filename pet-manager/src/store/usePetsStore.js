@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { DATABASE_ID, COLLECTION_ID_PETS, database, PROJECT_ID, STORAGE_ID, storage } from '../appwriteConfig';
 import { ID, Query } from 'appwrite';
 
+import { toast, Bounce } from 'react-toastify';
+
 
 // Zustand store for managing pets
 const usePetsStore = create((set) => ({
@@ -17,6 +19,7 @@ const usePetsStore = create((set) => ({
       set({ pets: response.documents, loading: false });
     } catch (error) {
       console.error('Error fetching pets:', error);
+      toast.error("Error fetching pets", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
       set({ loading: false });
     }
 
@@ -58,6 +61,7 @@ const usePetsStore = create((set) => ({
       }));
     } catch (error) {
       console.error("Error creating pet:", error);
+      toast.error("Error adding a new pet", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
       set({ loading: false });
     }
   },
@@ -72,7 +76,7 @@ const usePetsStore = create((set) => ({
   
       // Extract file ID from Pet_Image URL
       const imageUrl = pet.Pet_Image;
-      const fileId = null
+      let fileId = null
       if (imageUrl) {
         const fileIdMatch = imageUrl.match(/files\/(.*?)\//);
         fileId = fileIdMatch ? fileIdMatch[1] : null;
@@ -93,6 +97,7 @@ const usePetsStore = create((set) => ({
       }));
     } catch (error) {
       console.error("Error removing pet:", error);
+      toast.error("Error deleting pet", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
       set({ loading: false });
     }
   },

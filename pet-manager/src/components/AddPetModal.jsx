@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import usePetsStore from "../store/usePetsStore";
 import { useAuth } from "../store/AuthContext";
 
+import { toast, Flip } from "react-toastify";
+
 const AddPetModal = ({ closeModal }) => {
   const { createPet } = usePetsStore();
   const { user } = useAuth();
@@ -20,10 +22,9 @@ const AddPetModal = ({ closeModal }) => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!user) return alert("You must be logged in to add a pet.");
-
     await createPet(petData, user.$id, selectedFile);
     setPetData({ Name: "", Type: "", Pet_Image: "" });
+    toast.success("Pet added!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, hideProgressBar: true, autoClose: 2000});
     closeModal();
   };
 

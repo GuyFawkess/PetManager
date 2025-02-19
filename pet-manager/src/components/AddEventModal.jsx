@@ -3,6 +3,8 @@ import useEventsStore from "../store/useEventsStore";
 import usePetsStore from "../store/usePetsStore";
 import { useAuth } from "../store/AuthContext";
 
+import { toast, Flip } from "react-toastify";
+
 const AddEventModal = ({ closeModal, initialData = null }) => {
 
     const { createEvent, updateEvent } = useEventsStore();
@@ -55,8 +57,10 @@ const AddEventModal = ({ closeModal, initialData = null }) => {
       
         if (initialData) {
           await updateEvent(initialData.id, eventData);
+          toast.success("Event updated!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, hideProgressBar: true, autoClose: 2000});
         } else {
           await createEvent(eventData);
+          toast.info("Event created!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, hideProgressBar: true, autoClose: 2000});
         }
       
         setFormData({ title: '', start: '', end: '', pet: '', petID: '' });
@@ -137,7 +141,7 @@ const AddEventModal = ({ closeModal, initialData = null }) => {
             ))}
           </select>
           <button type="submit" className="bg-green-500 text-white p-2 rounded">
-            Add Event
+            {initialData ? "Update Event" : "Add Event"}
           </button>
         </form>
       
