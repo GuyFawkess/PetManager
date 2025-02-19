@@ -13,6 +13,9 @@ import MyCalendar from './pages/Calendar'
 import CardSmall from './components/CardSmall'
 import AddEventModal from './components/AddEventModal'
 
+import {toast, ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 
 function App() {
 
@@ -36,6 +39,7 @@ function App() {
           </Route>
         </Routes>
       </AuthProvider>
+      <ToastContainer />
     </Router>
   )
 }
