@@ -72,9 +72,11 @@ const usePetsStore = create((set) => ({
   
       // Extract file ID from Pet_Image URL
       const imageUrl = pet.Pet_Image;
-      const fileIdMatch = imageUrl.match(/files\/(.*?)\//);
-      const fileId = fileIdMatch ? fileIdMatch[1] : null;
-  
+      const fileId = null
+      if (imageUrl) {
+        const fileIdMatch = imageUrl.match(/files\/(.*?)\//);
+        fileId = fileIdMatch ? fileIdMatch[1] : null;
+    }
       // Delete pet document
       await database.deleteDocument(DATABASE_ID, COLLECTION_ID_PETS, id);
   
