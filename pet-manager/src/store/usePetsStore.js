@@ -15,7 +15,6 @@ const usePetsStore = create((set) => ({
     set({ loading: true });
     try {
       const response = await database.listDocuments(DATABASE_ID, COLLECTION_ID_PETS, [Query.equal("OwnerID", OwnerID)]);
-      console.log('RESPONSE', response);
       set({ pets: response.documents, loading: false });
     } catch (error) {
       console.error('Error fetching pets:', error);
@@ -44,7 +43,11 @@ const usePetsStore = create((set) => ({
       }
   
       // Step 2: Create the pet document with the uploaded image URL
-      const newPet = { ...petData, OwnerID: userID, Pet_Image: imageUrl };
+      const newPet = { 
+        ...petData, 
+        OwnerID: userID, 
+        Pet_Image: imageUrl || null
+      };
   
       const response = await database.createDocument(
         DATABASE_ID,

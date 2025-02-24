@@ -54,7 +54,13 @@ const AddPetModal = ({ closeModal }) => {
             <option value="">Select Type</option>
             <option value="Dog">Dog</option>
             <option value="Cat">Cat</option>
+            <option value="Ferret">Ferret</option>
             <option value="Bird">Bird</option>
+            <option value="Rodent/Bunny">Rodent/Bunny</option>
+            <option value="Turtle/Lizard/Amphibian">Turtle/Lizard/Amphibian</option>
+            <option value="Snake">Snake</option>
+            <option value="Fish">Fish</option>
+            <option value="Invertebrate">Invertebrate</option>
           </select>
           <label htmlFor="Name">Name of your pet:</label>
           <input
