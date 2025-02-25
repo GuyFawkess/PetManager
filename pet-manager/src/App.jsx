@@ -15,6 +15,7 @@ import AddEventModal from './components/AddEventModal'
 
 import {toast, ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import SinglePet from './pages/SinglePet'
 
 
 function App() {
@@ -24,10 +25,6 @@ function App() {
       <AuthProvider>
         <Header />
         <Routes>
-          {/* borar */}
-          <Route path='/tarjeta' element={<CardSmall />} /> 
-          <Route path='/events' element={<AddEventModal />} /> 
-          {/* borrar above */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
@@ -36,6 +33,7 @@ function App() {
             <Route path="/pets" element={<Pets />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/calendar" element={<MyCalendar />} />
+            <Route path="/singlepet/:id" element={<SinglePet />} />
           </Route>
         </Routes>
       </AuthProvider>

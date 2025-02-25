@@ -4,6 +4,8 @@ import AddPetModal from "../components/AddPetModal";
 import PetViewModal from "../components/PetViewModal"
 import Button from "../components/Button";
 import { useAuth } from "../store/AuthContext";
+import { Link, useNavigate, useParams } from 'react-router-dom'
+
 
 const Pets = () => {
   const { pets, fetchPets, loading, removePet } = usePetsStore();
@@ -46,12 +48,10 @@ const Pets = () => {
                 <h2 className="card-title">{pet.Name}</h2>
                 <p>Type: {pet.Type}</p>
                 <div className="card-actions justify-end">
-                  <button
-                    onClick={() => {setShowPetViewModal(true); setSelectedPet(pet)}}
-                    className="btn btn-warning "
+                  <Link to={`/singlepet/${pet.$id}`}
                   >
                     Details
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>
