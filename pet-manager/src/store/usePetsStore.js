@@ -15,7 +15,7 @@ const usePetsStore = create((set) => ({
     set({ loading: true });
     try {
       const response = await database.listDocuments(DATABASE_ID, COLLECTION_ID_PETS, [Query.equal("OwnerID", OwnerID)]);
-      set({ pets: response.documents, loading: false });
+      set({ pets: response?.documents || [], loading: false });
     } catch (error) {
       console.error('Error fetching pets:', error);
       toast.error("Error fetching pets", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
@@ -29,16 +29,16 @@ const usePetsStore = create((set) => ({
     set({ loading: true });
   
     try {
-      let imageUrl = ""; // Default empty image
+      let imageUrl = "";
   
       // Step 1: Upload image if a file is provided
       if (file) {
         const fileResponse = await storage.createFile(STORAGE_ID, ID.unique(), file);
         console.log("File Upload Response:", fileResponse);
   
-        if (fileResponse && fileResponse.$id) {
+        if (fileResponse?.$id) {
           const fileId = fileResponse.$id;
-          imageUrl = `https://cloud.appwrite.io/v1/storage/buckets/${STORAGE_ID}/files/${fileId}/view?project=${PROJECT_ID}`;
+          imageUrl = storage.getFilePreview(STORAGE_ID, fileId);
         }
       }
   
