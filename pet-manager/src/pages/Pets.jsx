@@ -8,7 +8,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 
 
 const Pets = () => {
-  const { pets, fetchPets, loading, removePet } = usePetsStore();
+  const { pets, fetchPets, loading } = usePetsStore();
   const [showAddPetModal, setShowAddPetModal] = useState(false);
   const [showPetViewModal, setShowPetViewModal] = useState(false);
   const [selectedPet, setSelectedPet] = useState(null);
