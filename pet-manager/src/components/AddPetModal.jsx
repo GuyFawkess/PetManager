@@ -7,7 +7,7 @@ import { toast, Flip } from "react-toastify";
 const AddPetModal = ({ closeModal }) => {
   const { createPet } = usePetsStore();
   const { user } = useAuth();
-  const [petData, setPetData] = useState({ Name: "", Type: "", Pet_Image: "", birth_date: "", race_species: "" });
+  const [petData, setPetData] = useState({ Name: "", Type: "", Pet_Image: "", birth_date: "", breed_species: "" });
   const [selectedFile, setSelectedFile] = useState(null)
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +25,7 @@ const AddPetModal = ({ closeModal }) => {
     e.preventDefault();
     setLoading(true);
     await createPet(petData, user.$id, selectedFile);
-    setPetData({ Name: "", Type: "", Pet_Image: "", birth_date: "", race_species: "" });
+    setPetData({ Name: "", Type: "", Pet_Image: "", birth_date: "", breed_species: "" });
     setSelectedFile(null);
     toast.success("Pet added!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Flip, hideProgressBar: true, autoClose: 2000 });
     setLoading(false);
@@ -64,7 +64,7 @@ const AddPetModal = ({ closeModal }) => {
               tabIndex={0}
               class="card card-sm dropdown-content bg-base-100 rounded-box z-1 w-64 shadow-sm">
               <div tabIndex={0} className="card-body">
-                <h2 className="card-title">This information will not be able to edit</h2>
+                <h2 className="card-title">This information will not be able to be edited,</h2>
                 <p>No se si ponerlo aqui arriba o al lado del botom de add pet pero esque se veia un poco feo, pero es un bonito detalle ya mirare donde ponerlo :)</p>
               </div>
             </div>
@@ -93,8 +93,8 @@ const AddPetModal = ({ closeModal }) => {
             {/* borrar esta linea de arriba */}
           </fieldset>
           <fieldset className="fieldset">
-            <legend className="fieldset-legend">What is your pet's race or specie?</legend>
-            <input type="text" name="race_species" value={petData.race_species} onChange={handleInputChange} className="input" placeholder="Type here" required />
+            <legend className="fieldset-legend">What is your pet's breed or specie?</legend>
+            <input type="text" name="breed_species" value={petData.breed_species} onChange={handleInputChange} className="input" placeholder="Type here" required />
           </fieldset>
 
           <fieldset className="fieldset">
