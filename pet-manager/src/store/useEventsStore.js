@@ -4,7 +4,6 @@ import { ID, Query } from 'appwrite';
 
 import { toast, Bounce } from 'react-toastify';
 
-// Zustand store for managing events
 const useEventsStore = create((set) => ({
   events: [], // State: List of events
   loading: false,
@@ -29,7 +28,7 @@ const useEventsStore = create((set) => ({
 
     } catch (error) {
       console.log('Error fetching events:', error);
-      toast.error("Error Fetching the Events", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
+      toast.error("Error Fetching the Events", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
       set({ loading: false });
     }
   },
@@ -45,7 +44,7 @@ const useEventsStore = create((set) => ({
         ID.unique(),
         eventData
       );
-      
+
       // convert and add the new created event to the store
       const newEvent = {
         id: response.$id,
@@ -62,45 +61,45 @@ const useEventsStore = create((set) => ({
       }));
     } catch (error) {
       console.log('Error creating event:', error);
-      toast.error("Error creating event", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
+      toast.error("Error creating event", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
       set({ loading: false });
     }
   },
 
 
   // Action: Update an event
-updateEvent: async (eventID, updatedData) => {
-  set({ loading: true });
+  updateEvent: async (eventID, updatedData) => {
+    set({ loading: true });
 
-  try {
-    const response = await database.updateDocument(
-      DATABASE_ID,
-      COLLECTION_ID_EVENTS,
-      eventID,
-      updatedData
-    );
+    try {
+      const response = await database.updateDocument(
+        DATABASE_ID,
+        COLLECTION_ID_EVENTS,
+        eventID,
+        updatedData
+      );
 
-    // Convert and update the event in the store
-    set((state) => ({
-      events: state.events.map((event) =>
-        event.id === eventID
-          ? {
+      // Convert and update the event in the store
+      set((state) => ({
+        events: state.events.map((event) =>
+          event.id === eventID
+            ? {
               ...event,
               title: response.Title,
               start: new Date(response.StartDate),
               end: new Date(response.EndDate),
               pet: response.PetName,
             }
-          : event
-      ),
-      loading: false,
-    }));
-  } catch (error) {
-    toast.error("Error updating event", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
-    console.error('Error updating event:', error);
-    set({ loading: false });
-  }
-},
+            : event
+        ),
+        loading: false,
+      }));
+    } catch (error) {
+      toast.error("Error updating event", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
+      console.error('Error updating event:', error);
+      set({ loading: false });
+    }
+  },
 
   // Action: Remove an event by ID
   removeEvent: async (id) => {
@@ -115,11 +114,12 @@ updateEvent: async (eventID, updatedData) => {
         loading: false,
       }));
     } catch (error) {
-      toast.error("Error deleting event", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
+      toast.error("Error deleting event", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
       console.log('Error removing event:', error);
       set({ loading: false });
     }
   },
 
 }));
+
 export default useEventsStore;

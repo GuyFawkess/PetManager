@@ -6,7 +6,7 @@ import Button from "../components/Button";
 import { useAuth } from "../store/AuthContext";
 
 const Pets = () => {
-  const { pets, fetchPets, loading, removePet } = usePetsStore();
+  const { pets, fetchPets, loading } = usePetsStore();
   const [showAddPetModal, setShowAddPetModal] = useState(false);
   const [showPetViewModal, setShowPetViewModal] = useState(false);
   const [selectedPet, setSelectedPet] = useState(null);
