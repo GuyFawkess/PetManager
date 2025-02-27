@@ -10,12 +10,10 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Pets from './pages/Pets'
 import MyCalendar from './pages/Calendar'
-import CardSmall from './components/CardSmall'
-import AddEventModal from './components/AddEventModal'
-
-import {toast, ToastContainer} from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import SinglePet from './pages/SinglePet'
+
+import {ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 
 function App() {

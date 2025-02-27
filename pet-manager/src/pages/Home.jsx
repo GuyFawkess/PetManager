@@ -10,7 +10,7 @@ import { Bounce, Flip, toast } from "react-toastify";
 
 const Home = () => {
   const { user } = useAuth();
-  const { events, loading, fetchEvents, removeEvent } = useEventsStore();
+  const { events, fetchEvents, removeEvent } = useEventsStore();
   const { pets, fetchPets } = usePetsStore();
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [showUpcoming, setShowUpcoming] = useState(true);
@@ -118,7 +118,7 @@ const Home = () => {
             <li className="p-4 pb-2 text-xs opacity-60 tracking-wide">{showUpcoming ? "Upcoming Events:" : "All Events:"}</li>
 
             {filteredEvents.map((event) => {
-              // Relacionamos el evento con el pet para buscar la info
+              // Relacionamos el evento con el pet para buscar la info hay que cambiarlo para que busque por id en vez de nombre
               const eventPet = pets?.find((p) => p.Name === event.pet);
               return (
                 <li key={event.id} className="list-row h-20 flex items-center">

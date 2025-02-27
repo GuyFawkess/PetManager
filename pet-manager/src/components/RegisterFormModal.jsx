@@ -4,7 +4,6 @@ import { useRegisterStore } from "../store/useRegisterStore";
 import { useAuth } from "../store/AuthContext";
 import ConfirmationModal from '../components/ConfirmationModal';
 import { toast, Flip, Bounce } from "react-toastify";
-import { use } from "react";
 
 
 const PetViewModal = ({ closeModal, pet }) => {

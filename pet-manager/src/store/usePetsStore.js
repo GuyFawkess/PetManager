@@ -60,6 +60,7 @@ const usePetsStore = create((set) => ({
       );
 
       console.log("Pet created:", response);
+      toast.success("Pet added!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Flip, hideProgressBar: true, autoClose: 2000 });
 
       set((state) => ({
         pets: [...state.pets, response],

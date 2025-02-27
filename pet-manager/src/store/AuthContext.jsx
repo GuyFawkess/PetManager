@@ -4,9 +4,7 @@ import { ID } from "appwrite";
 
 import { toast, Zoom, Bounce } from "react-toastify";
 
-
 const AuthContext = createContext();
-
 
 export const AuthProvider = ({ children }) => {
 
@@ -15,7 +13,6 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         checkUserStatus();
-
     }, []);
 
     const loginUser = async (userInfo) => {
@@ -111,7 +108,6 @@ export const AuthProvider = ({ children }) => {
             {loading ? <div className="flex justify-center items-center h-screen">
                 <span className="loading loading-bars loading-xl"></span>
             </div> : children}
-
         </AuthContext.Provider>
     )
 };
