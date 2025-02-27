@@ -1,18 +1,28 @@
 import React, { useState, useEffect, useRef } from "react";
 import usePetsStore from "../store/usePetsStore";
+import { useRegisterStore } from "../store/useRegisterStore";
 import { useAuth } from "../store/AuthContext";
 import ConfirmationModal from '../components/ConfirmationModal';
 import { toast, Flip, Bounce } from "react-toastify";
 
 
 const PetViewModal = ({ closeModal, pet }) => {
-    const { pets, fetchPets, loading, removePet } = usePetsStore();
+    if (!pet) {
+        return null;
+    }
+
+    const { fetchPets, removePet } = usePetsStore();
+    const { fetchRegisterData, registerData } = useRegisterStore();
+
     const { user } = useAuth();
     const dropdownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
     const [isConfirmVisible, setIsConfirmVisible] = useState(false);
     const [petToDelete, setPetToDelete] = useState(null);
 
+    useEffect(() => {
+        fetchRegisterData(pet.$id);
+    }, [pet]);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -86,6 +96,15 @@ const PetViewModal = ({ closeModal, pet }) => {
                 </div>
                 <h1 className="text-4xl py-8 font-bold text-center">Vista detallada de {pet.Name}</h1>
                 <div className="bg-orange-400 w-4/6 h-1 mx-auto mb-8"></div>
+                <div className="flex">
+                    <img src={pet.Pet_Image || `https://picsum.photos/300/400`} alt={pet.Name} className="w-40 h-40 object-cover rounded-lg shadow-md mx-4" />
+                <div className="mt-4 text-lg">
+                    <p><strong>Type:</strong> {pet.Type}</p>
+                    <p><strong>Breed:</strong> {pet.breed_species || "Unknown"}</p>
+                    <p><strong>Birth Year:</strong> {pet.birth_date || "Not provided"}</p>
+                    <p><strong>food:</strong> {registerData[0].food || "Not provided"}</p>
+                </div>
+                </div>
 
             </div>
             <ConfirmationModal

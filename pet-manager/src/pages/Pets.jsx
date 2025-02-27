@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import usePetsStore from "../store/usePetsStore";
 import AddPetModal from "../components/AddPetModal";
-import PetViewModal from "../components/PetViewModal"
+// import PetViewModal from "../components/PetViewModal"
 import Button from "../components/Button";
 import { useAuth } from "../store/AuthContext";
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 
 const Pets = () => {
-  const { pets, fetchPets, loading, removePet } = usePetsStore();
+  const { pets, fetchPets, loading } = usePetsStore();
   const [showAddPetModal, setShowAddPetModal] = useState(false);
   const [showPetViewModal, setShowPetViewModal] = useState(false);
   const [selectedPet, setSelectedPet] = useState(null);
@@ -48,7 +48,7 @@ const Pets = () => {
                 <h2 className="card-title">{pet.Name}</h2>
                 <p>Type: {pet.Type}</p>
                 <div className="card-actions justify-end">
-                  <Link to={`/singlepet/${pet.$id}`}
+                  <Link className="btn btn-warning" to={`/singlepet/${pet.$id}`}
                   >
                     Details
                   </Link>

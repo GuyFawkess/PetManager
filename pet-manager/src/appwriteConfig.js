@@ -5,6 +5,7 @@ export const DATABASE_ID = import.meta.env.VITE_DATABASE_ID;
 export const STORAGE_ID = import.meta.env.VITE_STORAGE_ID;
 export const COLLECTION_ID_PETS = import.meta.env.VITE_COLLECTION_ID_PETS;
 export const COLLECTION_ID_EVENTS = import.meta.env.VITE_COLLECTION_ID_EVENTS;
+export const COLLECTION_ID_REGISTER = import.meta.env.VITE_COLLECTION_ID_REGISTER;
 
 const client = new Client();
 client.setProject(PROJECT_ID);
