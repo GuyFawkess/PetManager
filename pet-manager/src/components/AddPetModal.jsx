@@ -27,7 +27,6 @@ const AddPetModal = ({ closeModal }) => {
     await createPet(petData, user.$id, selectedFile);
     setPetData({ Name: "", Type: "", Pet_Image: "", birth_date: "", breed_species: "" });
     setSelectedFile(null);
-    toast.success("Pet added!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Flip, hideProgressBar: true, autoClose: 2000 });
     setLoading(false);
     closeModal();
   };
