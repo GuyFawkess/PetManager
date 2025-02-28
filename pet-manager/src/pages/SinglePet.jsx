@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../store/AuthContext';
 import usePetsStore from "../store/usePetsStore";
 import useEventsStore from "../store/useEventsStore";
@@ -7,6 +7,8 @@ import dayjs from "dayjs";
 import { useRegisterStore } from '../store/useRegisterStore';
 import { toast } from 'react-toastify';
 import { Flip, Bounce } from 'react-toastify';
+import RegisterFormModal from '../components/RegisterFormModal';
+
 
 const SinglePet = () => {
     const { pets, fetchPets, removePet, loading } = usePetsStore();
@@ -21,6 +23,7 @@ const SinglePet = () => {
     const [currentPet, setCurrentPet] = useState(null);
     const navigate = useNavigate();
     const [filteredEvents, setFilteredEvents] = useState([]);
+    const [showRegister, setShowRegister] = useState(false);
 
     const randomNumber = Math.floor(Math.random() * 237)
 
@@ -74,9 +77,21 @@ const SinglePet = () => {
         return <p className="text-center text-lg mt-10">Pet not found or still loading...</p>;
     }
 
+    const calculateAge = (date) => {
+        const birthDate = dayjs(date)
+        const today = dayjs()
+        let age = today.diff(birthDate, 'year')
+        let ageText = `${age} years old`
+        if (age < 1){
+            age = today.diff(birthDate, 'month')
+            ageText = `${age} months old`
+        }
+        return ageText
+    }
+
     return (
         <main className="min-h-130 bg-[url('/src/assets/undraw_friends_xscy.svg')] 
-    bg-no-repeat bg-[length:40%] bg-[position:right_top]">
+        bg-no-repeat bg-[length:40%] bg-[position:right_top]">
             <div className='mx-auto p-4 text-2xl w-11/12'>
                 <h1 className="mb-3 letrasLogo text-5xl text-amber-600 drop-shadow-[1px_1px_0.5px_black]">
                     Meet {currentPet.Name}
@@ -96,13 +111,16 @@ const SinglePet = () => {
                             /></div>
                             <div className='mx-4'>
                                 <p><strong>Type:</strong> {currentPet.Type}</p>
-                                <p><strong>Breed:</strong> {currentPet.breed_species || "Unknown"}</p>
-                                <p><strong>Birth Year:</strong> {currentPet.birth_date || "Not provided"}</p>
+                                <p><strong>Breed/Species:</strong> {currentPet.breed_species || "Unknown"}</p>
+                                <p><strong>Age:</strong> {calculateAge(currentPet.birth_date) || "Not provided"}</p>
+                                <button className='btn btn-warning mt-1'>Edit details</button>
+                                <button className='btn btn-warning mt-1 ms-1' onClick={() => setShowRegister(true)}>Add new register</button>
+                                {showRegister && <RegisterFormModal closeModal={() => setShowRegister(false)} pet={currentPet} />}
                             </div>
                         </div>
                         <div className='row-start-2'>
                             {filteredEvents.length === 0 ? (
-                                <p>No events available.</p>
+                                <p>No events scheduled.</p>
                             ) : (
                                 <ul>
                                     {filteredEvents.map((event) => {
@@ -147,7 +165,9 @@ const SinglePet = () => {
 
                     </div>
                 )}
-
+                <Link className="btn btn-warning mt-2" to={`/pets`}>
+                    Back to all pets
+                </Link>
 
             </div>
 
