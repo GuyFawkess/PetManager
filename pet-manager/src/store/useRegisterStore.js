@@ -3,7 +3,7 @@ import { DATABASE_ID, COLLECTION_ID_REGISTER, database } from "../appwriteConfig
 import { ID, Query } from "appwrite";
 
 export const useRegisterStore = create((set) => ({
-    registerData: {},
+    registerData: [],
     loading: false,
 
     fetchRegisterData: async (PetID) => {
@@ -16,9 +16,10 @@ export const useRegisterStore = create((set) => ({
         try {
             const response = await database.listDocuments(DATABASE_ID, COLLECTION_ID_REGISTER,  [
                 Query.equal("PetID", PetID),
+                Query.orderAsc('\$createdAt'),
             ]);
             set({ registerData: response?.documents || [], loading: false });
-            console.log("Register Data:", response?.documents);
+            // console.log("Register Data:", response?.documents);
         } catch (error) {
             console.error("Error fetching register data:", error);
             set({ loading: false });
