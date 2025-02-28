@@ -38,7 +38,6 @@ const AddPetModal = ({ closeModal }) => {
   };
 
 
-
   return (
     <div id="modal-bg" className="fixed inset-0 min-h-screen bg-zinc-700/50 flex justify-center items-center" onClick={closeModalBgClick}>
       <div className="bg-gray-50 p-4 m-4 rounded-lg w-10/12 max-w-screen-md md:w-7/12 shadow-2xl relative">
@@ -51,7 +50,7 @@ const AddPetModal = ({ closeModal }) => {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                class="h-4 w-4 stroke-current">
+                className="h-4 w-4 stroke-current">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -61,7 +60,7 @@ const AddPetModal = ({ closeModal }) => {
             </div>
             <div
               tabIndex={0}
-              class="card card-sm dropdown-content bg-base-100 rounded-box z-1 w-64 shadow-sm">
+              className="card card-sm dropdown-content bg-base-100 rounded-box z-1 w-64 shadow-sm">
               <div tabIndex={0} className="card-body">
                 <h2 className="card-title">This information will not be able to be edited,</h2>
                 <p>No se si ponerlo aqui arriba o al lado del botom de add pet pero esque se veia un poco feo, pero es un bonito detalle ya mirare donde ponerlo :)</p>
@@ -92,7 +91,7 @@ const AddPetModal = ({ closeModal }) => {
             {/* borrar esta linea de arriba */}
           </fieldset>
           <fieldset className="fieldset">
-            <legend className="fieldset-legend">What is your pet's breed or specie?</legend>
+            <legend className="fieldset-legend">What is your pet's breed or species?</legend>
             <input type="text" name="breed_species" value={petData.breed_species} onChange={handleInputChange} className="input" placeholder="Type here" required />
           </fieldset>
 
@@ -112,9 +111,9 @@ const AddPetModal = ({ closeModal }) => {
 
           <div className="mx-0 my-[1em]">
             <button type="submit"
-              class="relative rounded px-5 py-2.5 overflow-hidden group bg-green-500 relative hover:bg-gradient-to-r hover:from-green-500 hover:to-green-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-400 transition-all ease-out duration-300">
-              <span class="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
-              <span class="relative">{loading ? "Adding..." : "Add Pet"}</span>
+              className="relative rounded px-5 py-2.5 overflow-hidden group bg-green-500 relative hover:bg-gradient-to-r hover:from-green-500 hover:to-green-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-400 transition-all ease-out duration-300">
+              <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+              <span className="relative">{loading ? "Adding..." : "Add Pet"}</span>
             </button>
 
           </div>

@@ -6,39 +6,16 @@ import ConfirmationModal from '../components/ConfirmationModal';
 import { toast, Flip, Bounce } from "react-toastify";
 
 
-const PetViewModal = ({ closeModal, pet }) => {
-    if (!pet) {
-        return null;
-    }
-
+const RegisterFormModal = ({ closeModal, pet}) => {
+   
     const { fetchPets, removePet } = usePetsStore();
     const { fetchRegisterData, registerData } = useRegisterStore();
-
     const { user } = useAuth();
-    const dropdownRef = useRef(null);
-    const [isOpen, setIsOpen] = useState(false);
-    const [isConfirmVisible, setIsConfirmVisible] = useState(false);
-    const [petToDelete, setPetToDelete] = useState(null);
-
-    useEffect(() => {
-        fetchRegisterData(pet.$id);
-    }, [pet]);
-
-    const toggleDropdown = () => {
-        setIsOpen(!isOpen);
-    };
-
-    const closeDropdown = (e) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-            setIsOpen(false);
-        }
-    };
-
-    useEffect(() => {
-        document.addEventListener("mousedown", closeDropdown);
-        return () => document.removeEventListener("mousedown", closeDropdown);
-    }, []);
-
+    const [register, setRegister] = useState({activity_level: undefined, food: undefined, substrate: undefined, water: undefined, last_feeding: undefined, temperature: undefined,
+        humidity: undefined, weight: undefined, medical_conditions: [], medication: []
+     })
+     const [newCondition, setNewCondition] = useState("");
+     const [newMedication, setNewMedication] = useState("")
 
     const closeModalBgClick = (e) => {
         if (e.target.id === "modal-bg") {
@@ -46,76 +23,205 @@ const PetViewModal = ({ closeModal, pet }) => {
         }
     }
 
-    const handleDeleteClick = (pet) => {
-        console.log("Deleting pet:", pet)
-        setPetToDelete(pet);
-        setIsConfirmVisible(true);
+    const handleInputChange = (e) => {
+        setRegister({ ...register, [e.target.name]: e.target.value })
+    }
+
+    const handleSubmit = async (e) => {
+        return
+    }
+
+    const handleAddCondition = () => {
+        if (newCondition) {
+            setRegister({
+                ...register,
+                medical_conditions: [...register.medical_conditions, newCondition],
+            });
+            setNewCondition(""); // Clear the input after adding
+        }
     };
 
-    const confirmDelete = async () => {
-        try {
-            console.log("Trying to delete", petToDelete.$id)
-            await removePet(petToDelete.$id)
-            fetchPets(user.$id); // Fetch the updated events list
-            setPetToDelete(null);
-            setIsConfirmVisible(false);
-            closeModal()
-            toast.warning("Pet Deleted!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true})
-        } catch (error) {
-            toast.error("Error deleting the pet", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
-            console.error("Error deleting event:", error);
+    const handleAddMedication = () => {
+        if (newMedication) {
+            setRegister({
+                ...register,
+                medication: [...register.medication, newMedication],
+            });
+            setNewMedication(""); // Clear the input after adding
         }
+    };
+
+    const handleDeleteCondition = (index) => {
+        const updatedConditions = [...register.medical_conditions];
+        updatedConditions.splice(index, 1); // Remove condition at the specified index
+        setRegister({ ...register, medical_conditions: updatedConditions });
+    };
+
+    const handleDeleteMedication = (index) => {
+        const updatedMedications = [...register.medication];
+        updatedMedications.splice(index, 1); // Remove medication at the specified index
+        setRegister({ ...register, medication: updatedMedications });
     }
+
+    // const handleDeleteClick = (pet) => {
+    //     console.log("Deleting pet:", pet)
+    //     setPetToDelete(pet);
+    //     setIsConfirmVisible(true);
+    // };
+
+    // const confirmDelete = async () => {
+    //     try {
+    //         console.log("Trying to delete", petToDelete.$id)
+    //         await removePet(petToDelete.$id)
+    //         fetchPets(user.$id); // Fetch the updated events list
+    //         setPetToDelete(null);
+    //         setIsConfirmVisible(false);
+    //         closeModal()
+    //         toast.warning("Pet Deleted!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true})
+    //     } catch (error) {
+    //         toast.error("Error deleting the pet", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
+    //         console.error("Error deleting event:", error);
+    //     }
+    // }
 
     return (
         <div id="modal-bg" className="fixed inset-0 min-h-screen bg-zinc-700/50 flex justify-center items-center" onClick={closeModalBgClick}>
             <div className="bg-gray-50 p-4 m-4 rounded-lg w-10/12 max-w-screen-md md:w-7/12 shadow-2xl relative">
-                {/* <a onClick={closeModal} className="absolute right-5 text-2xl hover:cursor-pointer">X</a> */}
-                <div ref={dropdownRef} className="dropdown dropdown-right absolute right-5">
-                    <button onClick={toggleDropdown} className="btn btn-circle swap swap-rotate">
-                        {isOpen ? (
-                            <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512">
-                                <polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49" />
-                            </svg>
-                        ) : (
-                            <svg className="fill-current" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512">
-                                <path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z" />
-                            </svg>
-                        )}
-                    </button>
-
-                    {/* Dropdown Menu */}
-                    {isOpen && (
-                        <ul className="menu dropdown-content bg-base-100 rounded-box w-52 p-2 shadow-sm absolute right-0 top-full mt-2">
-                            <li><a>Edit</a></li>
-                            <li>
-                                <button onClick={() => handleDeleteClick(pet)} className="hover:bg-red-700 hover:text-white">Delete</button>
-                            </li>
-                        </ul>
-                    )}
-                </div>
-                <h1 className="text-4xl py-8 font-bold text-center">Vista detallada de {pet.Name}</h1>
+                <h1 className="text-4xl py-8 font-bold text-center">New register</h1>
                 <div className="bg-orange-400 w-4/6 h-1 mx-auto mb-8"></div>
-                <div className="flex">
-                    <img src={pet.Pet_Image || `https://picsum.photos/300/400`} alt={pet.Name} className="w-40 h-40 object-cover rounded-lg shadow-md mx-4" />
-                <div className="mt-4 text-lg">
-                    <p><strong>Type:</strong> {pet.Type}</p>
-                    <p><strong>Breed:</strong> {pet.breed_species || "Unknown"}</p>
-                    <p><strong>Birth Year:</strong> {pet.birth_date || "Not provided"}</p>
-                    <p><strong>food:</strong> {registerData[0].food || "Not provided"}</p>
-                </div>
-                </div>
+                <form className="px-4 my-3 max-w-3xl mx-auto space-y-3 flex flex-wrap gap-x-7" onSubmit={handleSubmit}>
+          {pet.Type == "Dog" && <fieldset className="fieldset">
+            <legend className="fieldset-legend">Level of activity:</legend>
+            <select name="activity"
+              value={register.activity_level}
+              onChange={handleInputChange}
+              className="select">
+              <option disabled={true}>Select:</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </fieldset>}
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">Brand or type of food:</legend>
+            <input type="text" name="food" value={register.food} onChange={handleInputChange} className="input" placeholder="Type here" />
+          </fieldset>
+          {(pet.Type != "Dog" && pet.Type != "Bird") && <fieldset className="fieldset">
+            <legend className="fieldset-legend">Type of litter or substrate:</legend>
+            <input type="text" name="substrate" value={register.substrate} onChange={handleInputChange} className="input" placeholder="Type here" />
+          </fieldset>}
+          {pet.Type == "Snake" && <fieldset className="fieldset">
+            <legend className="fieldset-legend">Last feeding:</legend>
+            <input type="date" name="last-feeding" value={register.last_feeding} className="input" onChange={handleInputChange} />
+          </fieldset>}
+          {pet.Type == "Fish" && <fieldset className="fieldset">
+            <legend className="fieldset-legend">Type of water:</legend>
+            <select name="water"
+              value={register.water}
+              onChange={handleInputChange}
+              className="select">
+              <option disabled={true}>Select:</option>
+              <option value="Fresh">Freshwater</option>
+              <option value="Salt">Saltwater</option>
+            </select>
+          </fieldset>}
+            {(pet.Type == "Snake" || pet.Type == "Turtle/Lizard/Amphibian" || pet.Type == "Fish" || pet.Type == "Invertebrate") && <fieldset className="fieldset">
+                <legend className="fieldset-legend">Temperature (°C):</legend>
+                <input
+                type="number"
+                name="temperature"
+                value={register.temperature}
+                onChange={handleInputChange}
+                className="input"
+                placeholder="Temperature"
+                step="any"
+                />
+            </fieldset>}
+            {(pet.Type == "Snake" || pet.Type == "Turtle/Lizard/Amphibian" || pet.Type == "Fish" || pet.Type == "Invertebrate") && <fieldset className="fieldset">
+                <legend className="fieldset-legend">Humidity (%):</legend>
+                <input
+                type="number"
+                name="humidity"
+                value={register.humidity}
+                onChange={handleInputChange}
+                className="input"
+                placeholder="Humidity"
+                min="0"
+                max="100"
+                step="any"  
+                />
+            </fieldset>}
+            {(pet.Type !="Fish" && pet.Type != "Invertebrate") && <fieldset className="fieldset">
+                <legend className="fieldset-legend">Weight (kg):</legend>
+                <input
+                type="number"
+                name="weight"
+                value={register.weight}
+                onChange={handleInputChange}
+                className="input"
+                placeholder="Weight"
+                step="any" 
+                />
+            </fieldset>}
+            <fieldset className="fieldset">
+                        <legend className="fieldset-legend">Medical Conditions:</legend>
+                        <input
+                            type="text"
+                            value={newCondition}
+                            onChange={(e) => setNewCondition(e.target.value)}
+                            className="input"
+                            placeholder="Add a medical condition"
+                        />
+                        <button type="button" onClick={handleAddCondition} className="btn btn-warning">
+                            Add Condition
+                        </button>
+                        <ul>
+                            {register.medical_conditions.map((condition, index) => (
+                                <li key={index} className="flex justify-between items-center">
+                                    {condition}
+                                    <button type="button" onClick={() => handleDeleteCondition(index)} className="ml-2 text-red-500">
+                                        X
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </fieldset>
 
-            </div>
-            <ConfirmationModal
-                show={isConfirmVisible}
-                onConfirm={confirmDelete}
-                onCancel={closeModal}
-                message={`Are you sure you want to delete "${pet.Name}"?`}
-            />
-        </div>
+                    <fieldset className="fieldset">
+                        <legend className="fieldset-legend">Medication:</legend>
+                        <input
+                            type="text"
+                            value={newMedication}
+                            onChange={(e) => setNewMedication(e.target.value)}
+                            className="input"
+                            placeholder="Add a medication"
+                        />
+                        <button type="button" onClick={handleAddMedication} className="btn btn-warning">
+                            Add Medication
+                        </button>
+                        <ul>
+                            {register.medication.map((medication, index) => (
+                                <li key={index} className="flex justify-between items-center">
+                                    {medication}
+                                    <button type="button" onClick={() => handleDeleteMedication(index)} className="ml-2 text-red-500">
+                                        X
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </fieldset>
+                <div className="mx-0 my-[1em]">
+                    <button type="submit"
+                    className="relative rounded px-5 py-2.5 overflow-hidden group bg-green-500 relative hover:bg-gradient-to-r hover:from-green-500 hover:to-green-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-400 transition-all ease-out duration-300">
+                    <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+                    Save and submit
+                    </button>
+                </div>
+                </form>
+            </div>            
+        </div>        
     );
 
 }
 
-export default PetViewModal;
+export default RegisterFormModal;
