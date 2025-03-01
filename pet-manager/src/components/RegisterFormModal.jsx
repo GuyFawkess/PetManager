@@ -174,7 +174,7 @@ const RegisterFormModal = ({ closeModal, pet }) => {
                             className="input"
                             placeholder="Add a medical condition"
                         />
-                        <button type="button" onClick={handleAddCondition} className="btn btn-warning">
+                        <button type="button" onClick={handleAddCondition} className="btn btn-info">
                             Add Condition
                         </button>
                         <ul>
@@ -198,7 +198,7 @@ const RegisterFormModal = ({ closeModal, pet }) => {
                             className="input"
                             placeholder="Add a medication"
                         />
-                        <button type="button" onClick={handleAddMedication} className="btn btn-warning">
+                        <button type="button" onClick={handleAddMedication} className="btn btn-info">
                             Add Medication
                         </button>
                         <ul>
@@ -214,7 +214,7 @@ const RegisterFormModal = ({ closeModal, pet }) => {
                     </fieldset>
                     <div className="mx-0 my-[1em] flex flex-col justify-end">
                         <button type="submit"
-                            className=" relative rounded px-5 py-2.5 overflow-hidden group bg-green-500 hover:bg-gradient-to-r hover:from-green-500 hover:to-green-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-400 transition-all ease-out duration-300">
+                            className="btn btn-warning">
                             <span className="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
                             Save and submit
                         </button>

@@ -17,7 +17,7 @@ const SinglePet = () => {
     const { fetchRegisterData, registerData } = useRegisterStore();
     const { events, fetchEvents, removeEvent } = useEventsStore();
     const { user } = useAuth();
-    const dropdownRef = useRef(null);
+    // const dropdownRef = useRef(null);
     const [isOpen, setIsOpen] = useState(false);
     const [isPetConfirmVisible, setIsPetConfirmVisible] = useState(false);
     const [petToDelete, setPetToDelete] = useState(null);
@@ -153,9 +153,6 @@ const SinglePet = () => {
                                 <div className="flex flex-col">
                                     <strong>Type:</strong>
                                     <span>{currentPet.Type}</span>
-                                    <p className='my-2'><strong>Breed/Species:</strong> {currentPet.breed_species || "Unknown"}</p>
-                                    <p className='my-2'><strong>Age:</strong> {calculateAge(currentPet.birth_date) || "Not provided"}</p>
-                                    <button className='btn btn-error mt-1 ms-1 ' onClick={() => handleDeleteClick(currentPet)}>Delete {currentPet.Name}</button>
                                 </div>
                                 <div className="flex flex-col">
                                     <strong>Breed/Species:</strong>
@@ -165,6 +162,7 @@ const SinglePet = () => {
                                     <strong>Age:</strong>
                                     <span>{calculateAge(currentPet.birth_date) || "Not provided"}</span>
                                 </div>
+                                <button className='btn btn-error mt-1 ms-1 ' onClick={() => handleDeleteClick(currentPet)}>Delete {currentPet.Name}</button>
                             </div>
                             <div>
                                 <button className='btn btn-warning mt-1 ms-1 ' onClick={() => setShowRegister(true)}>Add new register</button>
@@ -174,7 +172,7 @@ const SinglePet = () => {
                         </div>
                     </div>
                     <div className='col-start-1 row-start-2 self-start'>
-                        <h2 className="text-lg font-semibold uppercase letrasLogo  text-amber-600 drop-shadow-[0.7px_0.8px_0.5px_black]">Appointments</h2>
+                        <h2 className="text-lg font-semibold uppercase letrasLogo  text-amber-600 drop-shadow-[0.7px_0.8px_0.5px_black]">Upcoming events</h2>
                         {filteredEvents.length === 0 ? (
                             <p>No events scheduled.</p>
                         ) : (
@@ -263,6 +261,7 @@ const SinglePet = () => {
                 onCancel={cancelDeletePet}
                 message={`Are you sure you want to delete "${petToDelete?.Name}"?`}
             />
+        </div>
     );
 };
 

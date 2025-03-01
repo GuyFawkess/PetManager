@@ -60,7 +60,7 @@ const Pets = () => {
         </div>
       )
       }
-      <Button handleClick={() => setShowAddPetModal(true)} text="Add Pet" />
+      <button className="btn btn-warning mt-2" onClick={() => setShowAddPetModal(true)}>Add Pet</button>
       {showAddPetModal && <AddPetModal closeModal={() => setShowAddPetModal(false)} />}
       {showPetViewModal && selectedPet && <PetViewModal closeModal={() => {setShowPetViewModal(false); setSelectedPet(null)}} pet={selectedPet} />}
     </div>
