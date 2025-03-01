@@ -28,12 +28,12 @@ const RegisterFormModal = ({ closeModal, pet }) => {
         const { name, value, type } = e.target;
         let parsedValue = value;
     
-        // Convert numerical inputs to float
         if (type === "number") {
             parsedValue = value ? parseFloat(value) : null;
-        }
+        } else if (type === "date") {
+            parsedValue = value || ""; 
     
-        setRegister({ ...register, [name]: parsedValue });
+        setRegister({ ...register, [name]: parsedValue });}
     };
     
 
@@ -133,7 +133,7 @@ const RegisterFormModal = ({ closeModal, pet }) => {
                     </fieldset>}
                     {pet.Type == "Snake" && <fieldset className="fieldset">
                         <legend className="fieldset-legend">Last feeding:</legend>
-                        <input type="date" name="last-feeding" value={register.last_feeding} className="input" onChange={handleInputChange} />
+                        <input type="date" name="last_feeding" value={register.last_feeding || ""} className="input" onChange={handleInputChange} />
                     </fieldset>}
                     {pet.Type == "Fish" && <fieldset className="fieldset">
                         <legend className="fieldset-legend">Type of water:</legend>
