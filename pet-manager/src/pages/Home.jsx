@@ -54,10 +54,10 @@ const Home = () => {
       fetchEvents(user.$id); // Fetch the updated events list
       setEventToDelete(null);
       setIsConfirmVisible(false);
-      toast.warning("Event deleted!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true})
+      toast.warning("Event deleted!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true })
     } catch (error) {
       console.error("Error deleting event:", error);
-      toast.error("Error deleting event", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
+      toast.error("Error deleting event", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
     }
   }
 
@@ -69,7 +69,7 @@ const Home = () => {
   const randomNumber = Math.floor(Math.random() * 237);
 
   return (
-    <main className="min-h-full bg-[url('/src/assets/undraw_cat_lqdj.svg'),url('/src/assets/undraw_dog_jfxm.svg')] 
+    <main className="min-h-fit bg-[url('/src/assets/undraw_cat_lqdj.svg'),url('/src/assets/undraw_dog_jfxm.svg')] 
   bg-no-repeat bg-[length:30%,40%] bg-[position:left_center,right_center]">
       <div className="mx-auto p-4 text-2xl flex flex-col items-center">
         <img src="/src/assets/undraw_welcome-cats_tw36.svg" alt="Cat Icon" className="h-30 w-auto" />
@@ -138,7 +138,6 @@ const Home = () => {
                       {event.pet ? `With ${event.pet}` : "No Pet Assigned"}
                     </div>
                   </div>
-                  {/* cambiar boton aqui que te lleve al calendario o borrar notificacion */}
                   <button className="btn btn-ghost ml-auto dropdown dropdown-right dropdown-center">
                     <svg
                       className="size-[1.2em]"
@@ -173,7 +172,7 @@ const Home = () => {
           message={`Are you sure you want to delete "${eventToDelete?.title}"?`}
         />
       </div>
-     
+
     </main>
   );
 };
