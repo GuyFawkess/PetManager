@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import usePetsStore from "../store/usePetsStore";
 import AddPetModal from "../components/AddPetModal";
 // import PetViewModal from "../components/PetViewModal"
-import Button from "../components/Button";
 import { useAuth } from "../store/AuthContext";
 import { Link, useNavigate, useParams } from 'react-router-dom'
 

@@ -171,7 +171,7 @@ const SinglePet = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='col-start-1 row-start-2 self-start'>
+                    <div className='col-start-1 row-start-2'>
                         <h2 className="text-lg font-semibold uppercase letrasLogo  text-amber-600 drop-shadow-[0.7px_0.8px_0.5px_black]">Upcoming events</h2>
                         {filteredEvents.length === 0 ? (
                             <p>No events scheduled.</p>
