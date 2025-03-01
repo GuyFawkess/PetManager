@@ -17,15 +17,17 @@ const SinglePet = () => {
     const { fetchRegisterData, registerData } = useRegisterStore();
     const { events, fetchEvents, removeEvent } = useEventsStore();
     const { user } = useAuth();
+    const dropdownRef = useRef(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const [isPetConfirmVisible, setIsPetConfirmVisible] = useState(false);
     const [petToDelete, setPetToDelete] = useState(null);
     const { id } = useParams();
     const [currentPet, setCurrentPet] = useState(null);
     const navigate = useNavigate();
     const [filteredEvents, setFilteredEvents] = useState([]);
     const [showRegister, setShowRegister] = useState(false);
-    const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+    const [isEventConfirmVisible, setIsEventConfirmVisible] = useState(false);
     const [eventToDelete, setEventToDelete] = useState(null);
-
     const [editingEvent, setEditingEvent] = useState(null);
 
     const randomNumber = Math.floor(Math.random() * 237)
@@ -38,7 +40,6 @@ const SinglePet = () => {
             fetchEvents(user.$id);
         }
     }, [user, showRegister ]);
-
     // EESTA BUSCANDO LAS MASCOTAS POR NOMBRE EN VEZ DE ID PORQUE EL EVENTO NO GUARDA EL PETID SINO EL NOMBRE ESTARIA BIEN CAMBIARLO PERO PARA EL FUTURO, TE DEJO ESTE COMENTARIO PARA QUE LO SEPAS(PASA LO MISMO EN EL HOME)
     useEffect(() => {
         if (currentPet) {
@@ -59,7 +60,7 @@ const SinglePet = () => {
 
     const handleDeleteEventClick = (event) => {
         setEventToDelete(event);
-        setIsConfirmVisible(true);
+        setIsEventConfirmVisible(true);
     };
 
     const handleDeletePetClick = (pet) => {
@@ -71,7 +72,7 @@ const SinglePet = () => {
             await removeEvent(eventToDelete.id)
             fetchEvents(user.$id); // Fetch the updated events list
             setEventToDelete(null);
-            setIsConfirmVisible(false);
+            setIsEventConfirmVisible(false);
             toast.warning("Event deleted!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true })
         } catch (error) {
             console.error("Error deleting event:", error);
@@ -81,20 +82,12 @@ const SinglePet = () => {
 
     const cancelDelete = () => {
         setEventToDelete(null);
-        setIsConfirmVisible(false);
+        setIsEventConfirmVisible(false);
     };
-    const confirmDeletePet = async () => {
-        try {
-            console.log("Trying to delete", petToDelete.$id);
-            await removePet(petToDelete.$id);
-            fetchPets(user.$id);
-            setPetToDelete(null);
-            toast.warning("Pet Deleted!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true });
-            navigate('/pets'); // Redirect after deleting the pet
-        } catch (error) {
-            toast.error("Error deleting the pet", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce });
-            console.error("Error deleting pet:", error);
-        }
+    
+    const cancelDeletePet = () => {
+        setPetToDelete(null);
+        setIsPetConfirmVisible(false);
     };
 
     if (!currentPet) {
@@ -111,6 +104,25 @@ const SinglePet = () => {
             ageText = `${age} months old`
         }
         return ageText
+    }
+
+    const handleDeleteClick = (pet) => {
+        setPetToDelete(pet);
+        setIsPetConfirmVisible(true);
+    };
+
+    const confirmDeletePet = async () => {
+        try {
+            await removePet(petToDelete.$id)
+            fetchPets(user.$id); 
+            setPetToDelete(null);
+            setIsPetConfirmVisible(false);
+            toast.warning("Pet Deleted!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true})
+            navigate('/pets')
+        } catch (error) {
+            toast.error("Error deleting the pet", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
+            console.error("Error deleting event:", error);
+        }
     }
 
     return (
@@ -141,6 +153,9 @@ const SinglePet = () => {
                                 <div className="flex flex-col">
                                     <strong>Type:</strong>
                                     <span>{currentPet.Type}</span>
+                                    <p className='my-2'><strong>Breed/Species:</strong> {currentPet.breed_species || "Unknown"}</p>
+                                    <p className='my-2'><strong>Age:</strong> {calculateAge(currentPet.birth_date) || "Not provided"}</p>
+                                    <button className='btn btn-error mt-1 ms-1 ' onClick={() => handleDeleteClick(currentPet)}>Delete {currentPet.Name}</button>
                                 </div>
                                 <div className="flex flex-col">
                                     <strong>Breed/Species:</strong>
@@ -237,13 +252,17 @@ const SinglePet = () => {
             )}
 
             <ConfirmationModal
-                show={isConfirmVisible}
+                show={isEventConfirmVisible}
                 onConfirm={confirmDeleteEvent}
                 onCancel={cancelDelete}
                 message={`Are you sure you want to delete "${eventToDelete?.title}"?`}
             />
-
-        </div>
+            <ConfirmationModal
+                show={isPetConfirmVisible}
+                onConfirm={confirmDeletePet}
+                onCancel={cancelDeletePet}
+                message={`Are you sure you want to delete "${petToDelete?.Name}"?`}
+            />
     );
 };
 

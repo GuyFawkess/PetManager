@@ -31,9 +31,9 @@ const RegisterFormModal = ({ closeModal, pet }) => {
         if (type === "number") {
             parsedValue = value ? parseFloat(value) : null;
         } else if (type === "date") {
-            parsedValue = value || ""; 
+            parsedValue = value || "";}
     
-        setRegister({ ...register, [name]: parsedValue });}
+        setRegister({ ...register, [name]: parsedValue });
     };
     
 
@@ -84,26 +84,7 @@ const RegisterFormModal = ({ closeModal, pet }) => {
         setLoading(false);
         closeModal();
     }
-    // const handleDeleteClick = (pet) => {
-    //     console.log("Deleting pet:", pet)
-    //     setPetToDelete(pet);
-    //     setIsConfirmVisible(true);
-    // };
-
-    // const confirmDelete = async () => {
-    //     try {
-    //         console.log("Trying to delete", petToDelete.$id)
-    //         await removePet(petToDelete.$id)
-    //         fetchPets(user.$id); // Fetch the updated events list
-    //         setPetToDelete(null);
-    //         setIsConfirmVisible(false);
-    //         closeModal()
-    //         toast.warning("Pet Deleted!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true})
-    //     } catch (error) {
-    //         toast.error("Error deleting the pet", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
-    //         console.error("Error deleting event:", error);
-    //     }
-    // }
+    
 
     return (
         <div id="modal-bg" className="fixed inset-0 z-2 min-h-screen bg-zinc-700/50 flex justify-center items-center" onClick={closeModalBgClick}>
@@ -113,7 +94,7 @@ const RegisterFormModal = ({ closeModal, pet }) => {
                 <form className="px-4 my-3 max-w-3xl mx-auto space-y-3 flex flex-wrap gap-x-7" onSubmit={handleSubmit}>
                     {pet.Type == "Dog" && <fieldset className="fieldset">
                         <legend className="fieldset-legend">Level of activity:</legend>
-                        <select name="activity"
+                        <select name="activity_level"
                             value={register.activity_level}
                             onChange={handleInputChange}
                             className="select">
