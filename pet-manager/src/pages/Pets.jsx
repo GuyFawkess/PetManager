@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import usePetsStore from "../store/usePetsStore";
 import AddPetModal from "../components/AddPetModal";
 // import PetViewModal from "../components/PetViewModal"
-import Button from "../components/Button";
 import { useAuth } from "../store/AuthContext";
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
@@ -62,7 +61,6 @@ const Pets = () => {
       }
       <button className="btn btn-warning mt-2" onClick={() => setShowAddPetModal(true)}>Add Pet</button>
       {showAddPetModal && <AddPetModal closeModal={() => setShowAddPetModal(false)} />}
-      {showPetViewModal && selectedPet && <PetViewModal closeModal={() => {setShowPetViewModal(false); setSelectedPet(null)}} pet={selectedPet} />}
     </div>
     </main>
   );
