@@ -198,8 +198,16 @@ const SinglePet = () => {
                                         <li key={entry.$id || index} className="bg-gray-100 p-2 rounded-md">
                                             <p><strong>Date:</strong> {dayjs(entry.$createdAt).format("DD/MM/YYYY")}</p>
                                             {entry.food && <p><strong>Food:</strong> {entry.food}</p>}
+                                            {entry.last_feeding && (<p>
+                                                <strong>Last feeding:</strong> {new Date(entry.last_feeding).toLocaleDateString("en-US", { day: "numeric", month: "long" })}
+                                            </p>)}
                                             {entry.weight && <p><strong>Weight:</strong> {entry.weight} kg</p>}
-                                            {entry.substrate && <p><strong>Medication:</strong> {entry.substrate}</p>}
+                                            {entry.substrate && <p><strong>Substrate:</strong> {entry.substrate}</p>}
+                                            {entry.temperature && <p><strong>Temperature:</strong> {entry.temperature} ºC</p>}
+                                            {entry.humidity && <p><strong>Humidity:</strong> {entry.humidity} %</p>}
+                                            {entry.activity_level && <p><strong>Level of activity:</strong> {entry.activity_level}</p>}
+                                            {entry.medical_conditions.length >= 1 && <p><strong>Medical conditions:</strong> {entry.medical_conditions.join(", ")}</p>}
+                                            {entry.medication.length >= 1 && <p><strong>Medication:</strong> {entry.medication.join(", ")}</p>}
                                         </li>
                                     ))}
                                 </ul>
