@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { DATABASE_ID, COLLECTION_ID_PETS, database, STORAGE_ID, storage } from '../appwriteConfig';
 import { ID, Query } from 'appwrite';
 
-import { toast, Bounce } from 'react-toastify';
+import { toast, Bounce, Flip } from 'react-toastify';
 
 const usePetsStore = create((set) => ({
   pets: [],
