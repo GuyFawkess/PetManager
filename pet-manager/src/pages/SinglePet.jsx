@@ -8,6 +8,8 @@ import { useRegisterStore } from '../store/useRegisterStore';
 import { toast } from 'react-toastify';
 import { Flip, Bounce } from 'react-toastify';
 import RegisterFormModal from '../components/RegisterFormModal';
+import ConfirmationModal from '../components/ConfirmationModal';
+import AddEventModal from "../components/AddEventModal";
 
 
 const SinglePet = () => {
@@ -24,6 +26,10 @@ const SinglePet = () => {
     const navigate = useNavigate();
     const [filteredEvents, setFilteredEvents] = useState([]);
     const [showRegister, setShowRegister] = useState(false);
+    const [isConfirmVisible, setIsConfirmVisible] = useState(false);
+    const [eventToDelete, setEventToDelete] = useState(null);
+
+    const [editingEvent, setEditingEvent] = useState(null);
 
     const randomNumber = Math.floor(Math.random() * 237)
 
@@ -41,8 +47,8 @@ const SinglePet = () => {
         if (currentPet) {
             const updatedEvents = events
                 .filter(event => event.pet === currentPet.Name) // Filtrar por nombre en lugar de ID
-                .sort((a, b) => new Date(a.start) - new Date(b.start)); 
-    
+                .sort((a, b) => new Date(a.start) - new Date(b.start));
+
             setFilteredEvents(updatedEvents);
         }
     }, [events, currentPet]);
@@ -54,12 +60,33 @@ const SinglePet = () => {
         }
     }, [pets, id]);
 
-    const handleDeleteClick = (pet) => {
+    const handleDeleteEventClick = (event) => {
+        setEventToDelete(event);
+        setIsConfirmVisible(true);
+    };
+
+    const handleDeletePetClick = (pet) => {
         console.log("Deleting pet:", pet);
         setPetToDelete(pet);
     };
+    const confirmDeleteEvent = async () => {
+        try {
+            await removeEvent(eventToDelete.id)
+            fetchEvents(user.$id); // Fetch the updated events list
+            setEventToDelete(null);
+            setIsConfirmVisible(false);
+            toast.warning("Event deleted!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true })
+        } catch (error) {
+            console.error("Error deleting event:", error);
+            toast.error("Error deleting event", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
+        }
+    }
 
-    const confirmDelete = async () => {
+    const cancelDelete = () => {
+        setEventToDelete(null);
+        setIsConfirmVisible(false);
+    };
+    const confirmDeletePet = async () => {
         try {
             console.log("Trying to delete", petToDelete.$id);
             await removePet(petToDelete.$id);
@@ -82,7 +109,7 @@ const SinglePet = () => {
         const today = dayjs()
         let age = today.diff(birthDate, 'year')
         let ageText = `${age} years old`
-        if (age < 1){
+        if (age < 1) {
             age = today.diff(birthDate, 'month')
             ageText = `${age} months old`
         }
@@ -103,22 +130,26 @@ const SinglePet = () => {
                     </div>
                 ) : (
                     <div className="bg-white p-6 rounded-lg shadow-md mx-auto grid grid-cols-2 grid-rows-2 gap-3">
-                        <div className='col-span-2 flex'>
+                        <div className=' flex'>
                             <div> <img
                                 src={currentPet.Pet_Image || `https://picsum.photos/id/${randomNumber}/300/400`}
                                 alt={currentPet.Name}
                                 className="w-50 h-60 object-cover border-gray-300"
                             /></div>
-                            <div className='mx-4'>
-                                <p><strong>Type:</strong> {currentPet.Type}</p>
-                                <p><strong>Breed/Species:</strong> {currentPet.breed_species || "Unknown"}</p>
-                                <p><strong>Age:</strong> {calculateAge(currentPet.birth_date) || "Not provided"}</p>
-                                <button className='btn btn-warning mt-1'>Edit details</button>
-                                <button className='btn btn-warning mt-1 ms-1' onClick={() => setShowRegister(true)}>Add new register</button>
-                                {showRegister && <RegisterFormModal closeModal={() => setShowRegister(false)} pet={currentPet} />}
+                            <div className='mx-4 flex flex-col justify-between'>
+                                <div>
+                                    <p className='my-2'><strong>Type:</strong> {currentPet.Type}</p>
+                                    <p className='my-2'><strong>Breed/Species:</strong> {currentPet.breed_species || "Unknown"}</p>
+                                    <p className='my-2'><strong>Age:</strong> {calculateAge(currentPet.birth_date) || "Not provided"}</p>
+                                </div>
+                                <div>
+                                    <button className='btn btn-warning mt-1 ms-1 ' onClick={() => setShowRegister(true)}>Add new register</button>
+                                    {showRegister && <RegisterFormModal closeModal={() => setShowRegister(false)} pet={currentPet} />}
+
+                                </div>
                             </div>
                         </div>
-                        <div className='row-start-2'>
+                        <div className='col-start-1 row-start-2'>
                             {filteredEvents.length === 0 ? (
                                 <p>No events scheduled.</p>
                             ) : (
@@ -130,7 +161,7 @@ const SinglePet = () => {
                                                 <div className="text-4xl font-thin opacity-30 tabular-nums w-[7rem]">
                                                     {dayjs(event.start).format("DD/MM")}
                                                 </div>
-                                                
+
                                                 <div className="list-col-grow">
                                                     <div>{event.title}</div>
                                                     <div className="text-xs uppercase font-semibold opacity-60">
@@ -150,7 +181,7 @@ const SinglePet = () => {
                                                     </svg>
                                                     <ul tabIndex={0} className="mx-4 dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                                                         <li><a onClick={() => setEditingEvent(event)}>Edit</a></li>
-                                                        <li><a onClick={() => handleDeleteClick(event)} className="hover:bg-red-700 hover:text-white">Delete</a></li>
+                                                        <li><a onClick={() => handleDeleteEventClick(event)} className="hover:bg-red-700 hover:text-white">Delete</a></li>
                                                     </ul>
                                                 </button>
                                             </li>
@@ -159,9 +190,25 @@ const SinglePet = () => {
                                 </ul>
                             )}
                         </div>
-                        <div className='row-start-2'>
-                            <p><strong>food:</strong> {registerData[0]?.food || "Not provided"}</p>
+                        <div className='row-span-2 col-start-2 row-start-1'>
+                            <h2 className="text-lg font-semibold">Register History</h2>
+                            {Array.isArray(registerData) && registerData.length > 0 ? (
+                                <ul className="mt-2 space-y-2">
+                                    {registerData.map((entry, index) => (
+                                        <li key={entry.$id || index} className="bg-gray-100 p-2 rounded-md">
+                                            <p><strong>Date:</strong> {dayjs(entry.$createdAt).format("DD/MM/YYYY")}</p>
+                                            {entry.food && <p><strong>Food:</strong> {entry.food}</p>}
+                                            {entry.weight && <p><strong>Weight:</strong> {entry.weight} kg</p>}
+                                            {entry.substrate && <p><strong>Medication:</strong> {entry.substrate}</p>}
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>No register data available.</p>
+                            )}
+
                         </div>
+
 
                     </div>
                 )}
@@ -170,41 +217,19 @@ const SinglePet = () => {
                 </Link>
 
             </div>
+            {editingEvent && (
+                <AddEventModal
+                    closeModal={() => setEditingEvent(null)}
+                    initialData={editingEvent}
+                />
+            )}
 
-
-
-
-
-
-
-
-            {/* <div className="flex justify-center">
-                        <h1 className="mb-3 letrasLogo text-5xl text-amber-600 drop-shadow-[1px_1px_0.5px_black]">Meet {currentPet.Name}</h1>
-                <div className="bg-white p-6 rounded-lg shadow-md w-11/12">
-                    <div className="flex justify-between items-center">
-                         
-                    </div>
-
-                    <div className="w-full flex flex-col items-center mt-6">
-                        <img
-                            src={currentPet.Pet_Image || `https://picsum.photos/id/${randomNumber}/300/400`}
-                            alt={currentPet.Name}
-                            className="w-40 h-40 object-cover rounded-full border-2 border-gray-300"
-                        />
-                    </div>
-                    <p className="text-lg mt-4">This is the page of <span className="font-semibold">{currentPet.Name} the {currentPet.Type}</span></p>
-
-                    {petToDelete && (
-                        <div className="mt-6 bg-gray-200 p-4 rounded-lg text-center">
-                            <p>Are you sure you want to delete {petToDelete.Name}?</p>
-                            <div className="mt-4 flex justify-center gap-4">
-                                <button className="px-4 py-2 bg-red-600 text-white rounded-lg" onClick={confirmDelete}>Confirm</button>
-                                <button className="px-4 py-2 bg-gray-500 text-white rounded-lg" onClick={() => setPetToDelete(null)}>Cancel</button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </div> */}
+            <ConfirmationModal
+                show={isConfirmVisible}
+                onConfirm={confirmDeleteEvent}
+                onCancel={cancelDelete}
+                message={`Are you sure you want to delete "${eventToDelete?.title}"?`}
+            />
         </main>
     );
 };

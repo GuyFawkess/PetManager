@@ -20,7 +20,7 @@ const AddPetModal = ({ closeModal }) => {
     if (file) {
       setSelectedFile(file); // Store the file for later use
     }
-  };
+  }; 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
