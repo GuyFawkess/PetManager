@@ -14,7 +14,7 @@ import AddEventModal from "../components/AddEventModal";
 
 const SinglePet = () => {
     const { pets, fetchPets, removePet, loading } = usePetsStore();
-    const { fetchRegisterData, registerData } = useRegisterStore();
+    const { fetchRegisterData, registerData, deleteRegisterEntry } = useRegisterStore();
     const { events, fetchEvents, removeEvent } = useEventsStore();
     const { user } = useAuth();
     // const dropdownRef = useRef(null);
@@ -29,6 +29,8 @@ const SinglePet = () => {
     const [isEventConfirmVisible, setIsEventConfirmVisible] = useState(false);
     const [eventToDelete, setEventToDelete] = useState(null);
     const [editingEvent, setEditingEvent] = useState(null);
+    const [isRegisterConfirmVisible, setIsRegisterConfirmVisible] = useState(false);
+    const [registerToDelete, setRegisterToDelete] = useState(null);
 
     const randomNumber = Math.floor(Math.random() * 237)
 
@@ -90,6 +92,11 @@ const SinglePet = () => {
         setIsPetConfirmVisible(false);
     };
 
+    const cancelDeleteRegister = () => {
+        setRegisterToDelete(null)
+        setIsRegisterConfirmVisible(false);
+    }
+
     if (!currentPet) {
         return <p className="text-center text-lg mt-10">Pet not found or still loading...</p>;
     }
@@ -121,7 +128,27 @@ const SinglePet = () => {
             navigate('/pets')
         } catch (error) {
             toast.error("Error deleting the pet", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
-            console.error("Error deleting event:", error);
+            console.error("Error deleting pet:", error);
+        }
+    }
+
+    const handleDeleteRegister = (register) => {
+        setRegisterToDelete(register)
+        setIsRegisterConfirmVisible(true)
+        console.log(register)
+    }
+
+    const confirmDeleteRegister = async () => {
+        try {
+            await deleteRegisterEntry(registerToDelete.$id)
+            fetchRegisterData(id)
+            setRegisterToDelete(null)
+            setIsRegisterConfirmVisible(false)
+            toast.warning("Register Deleted!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true})
+        }
+        catch (error) {
+            toast.error("Error deleting register", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
+            console.error("Error deleting register:", error);
         }
     }
 
@@ -216,7 +243,12 @@ const SinglePet = () => {
                             <ul className="mt-2 space-y-2">
                                 {registerData.map((entry, index) => (
                                     <li key={entry.$id || index} className="bg-base-100 p-2 rounded-md shadow-sm">
-                                        <p><strong>Date:</strong> {dayjs(entry.$createdAt).format("DD/MM/YYYY")}</p>
+                                        <p>
+                                            <strong>Date:</strong> {dayjs(entry.$createdAt).format("DD/MM/YYYY")}
+                                            <span className='float-right'>
+                                                <button className='btn btn-soft btn-error' onClick={() => handleDeleteRegister(entry)} >X</button>
+                                            </span>
+                                        </p>
                                         {entry.food && <p><strong>Food:</strong> {entry.food}</p>}
                                         {entry.last_feeding && (<p>
                                             <strong>Last feeding:</strong> {new Date(entry.last_feeding).toLocaleDateString("en-US", { day: "numeric", month: "long" })}
@@ -260,6 +292,12 @@ const SinglePet = () => {
                 onConfirm={confirmDeletePet}
                 onCancel={cancelDeletePet}
                 message={`Are you sure you want to delete "${petToDelete?.Name}"?`}
+            />
+            <ConfirmationModal
+                show={isRegisterConfirmVisible}
+                onConfirm={confirmDeleteRegister}
+                onCancel={cancelDeleteRegister}
+                message={`Are you sure you want to delete this register?`}
             />
         </div>
     );

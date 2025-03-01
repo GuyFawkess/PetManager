@@ -60,4 +60,22 @@ export const useRegisterStore = create((set) => ({
         }
     },
 
+    deleteRegisterEntry: async (registerID) => {
+        set({ loading: true })
+        try {
+            const register = await database.getDocument(DATABASE_ID, COLLECTION_ID_REGISTER, registerID)
+            await database.deleteDocument(DATABASE_ID, COLLECTION_ID_REGISTER, registerID)
+            set((state) => ({
+                registerData: state.registerData.filter((register) => register.$id !== registerID),
+                loading: false,
+              }));
+            console.log("Deleted register:", registerID)
+        }
+        catch (error) {
+            console.error("Error removing register:", error);
+            toast.error("Error deleting register", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
+            set({ loading: false });
+        }
+    }
+
 }))
