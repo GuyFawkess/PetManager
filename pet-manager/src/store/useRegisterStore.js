@@ -2,6 +2,8 @@ import { create } from "zustand";
 import { DATABASE_ID, COLLECTION_ID_REGISTER, database } from "../appwriteConfig";
 import { ID, Query } from "appwrite";
 
+import { toast, Bounce, Flip } from 'react-toastify';
+
 export const useRegisterStore = create((set) => ({
     registerData: [],
     loading: false,
@@ -11,41 +13,51 @@ export const useRegisterStore = create((set) => ({
             console.error("PetId is undefined or null");
             set({ loading: false });
             return;
-          }
+        }
         set({ loading: true });
         try {
-            const response = await database.listDocuments(DATABASE_ID, COLLECTION_ID_REGISTER,  [
-                Query.equal("PetID", PetID),
-                Query.orderAsc('\$createdAt'),
-            ]);
+            const response = await database.listDocuments(
+                DATABASE_ID,
+                COLLECTION_ID_REGISTER,
+                [
+                    Query.equal("PetID", PetID),
+                    Query.orderDesc("$createdAt"),
+                    Query.limit(5),
+                ]
+            );
+
             set({ registerData: response?.documents || [], loading: false });
-            // console.log("Register Data:", response?.documents);
         } catch (error) {
+            toast.error("Error fetching register", {
+                position: 'top-center',
+                hideProgressBar: true,
+                theme: 'colored',
+                closeOnClick: true,
+                transition: Bounce,
+            });
             console.error("Error fetching register data:", error);
             set({ loading: false });
         }
-
     },
 
     addRegisterEntry: async (PetID, newEntry) => {
         set({ loading: true });
         try {
             const response = await database.createDocument(DATABASE_ID, COLLECTION_ID_REGISTER, ID.unique(), { ...newEntry, PetID });
+
             set((state) => ({
                 registerData: {
                     ...state.registerData,
-                    [PetID]: [document, ...(state.registerData[PetID] || [])].slice(0, 3), // Only keep the last 3 entries
+                    [PetID]: [response, ...(state.registerData[PetID] || [])].slice(0, 3), // Only keep the last 3 entries
                 },
             }));
+            toast.success("Register added!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Flip, hideProgressBar: true, autoClose: 2000 });
+            set({ loading: false });
         } catch (error) {
             console.error("Error adding register entry:", error);
+            toast.error("Error adding a new register", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
             set({ loading: false });
         }
     },
-
-    getLastThreeRecords: (field, PetID) => {
-        return (registerData[PetID] || []).map((entry) => entry[field]).slice(0, 3);
-    }
-
 
 }))

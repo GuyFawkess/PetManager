@@ -88,7 +88,7 @@ export const AuthProvider = ({ children }) => {
             setUser(accountDetails);
         } catch (error) {
             toast.error("User is not logged in", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
-      set({ loading: false });
+            setLoading(false);
             console.log("User is not logged in:", error.message);
             setUser(null);
         }
