@@ -140,7 +140,7 @@ const AddEventModal = ({ closeModal, initialData = null }) => {
               </option>
             ))}
           </select>
-          <button type="submit" className="bg-green-500 text-white p-2 rounded">
+          <button type="submit" className="btn btn-warning">
             {initialData ? "Update Event" : "Add Event"}
           </button>
         </form>
