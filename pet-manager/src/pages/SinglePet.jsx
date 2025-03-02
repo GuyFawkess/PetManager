@@ -154,91 +154,81 @@ const SinglePet = () => {
 
     return (
         <div className='mx-auto p-4 text-lg w-11/12'>
-            <div className='flex justify-between'>
-                <h1 className="mb-3 letrasLogo text-5xl text-amber-600 drop-shadow-[1px_1px_0.5px_black]">
-                    Meet {currentPet.Name}
-                </h1>
-                <Link className="btn btn-warning mt-2" to={`/pets`}>
-                    Back to all pets
-                </Link>
+            {/* Title & Back Button */}
+        <div className='flex flex-col md:flex-row justify-between items-start'>
+            <h1 className="mb-3 letrasLogo text-4xl sm:text-5xl text-amber-600 drop-shadow-[1px_1px_0.5px_black]">
+                Meet {currentPet.Name}
+            </h1>
+            <Link className="btn btn-warning mt-2 md:mt-0 mb-2" to={`/pets`}>
+                Back to all pets
+            </Link>
+        </div>
+
+        {loading ? (
+            <div className="flex justify-center items-center h-auto">
+                <span className="loading loading-spinner loading-xl"></span>
             </div>
-
-            {loading ? (
-                <div className="flex justify-center items-center h-auto">
-                    <span className="loading loading-spinner loading-xl"></span>
-                </div>
-            ) : (
-                <div className="bg-white p-6 rounded-lg shadow-md mx-auto grid grid-cols-2 auto-rows-max gap-5 min-h-fit items-start">
-                    <div className='flex max-h-80'>
-                        <div> <img
-                            src={currentPet.Pet_Image || `https://picsum.photos/id/${randomNumber}/300/400`}
-                            alt={currentPet.Name}
-                            className="w-70 h-70 rounded object-cover shadow-md"
-                        /></div>
-                        <div className='mx-4 flex flex-col justify-between'>
-                            <div className="space-y-2">
-                                <div className="flex flex-col">
-                                    <strong>Type:</strong>
-                                    <span>{currentPet.Type}</span>
+        ) : (
+            <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md mx-auto flex flex-col gap-5">
+                {/* PC: Two Columns | Mobile: Stacked */}
+                <div className="md:grid md:grid-cols-2 gap-5">
+                    {/* Left Column (Image + Data & Buttons, then Events) */}
+                    <div className="flex flex-col gap-5">
+                        {/* Row 1: Pet Image & Data */}
+                        <div className="flex flex-col sm:flex-row items-center sm:items-start">
+                            <img
+                                src={currentPet.Pet_Image || `https://picsum.photos/id/${randomNumber}/300/400`}
+                                alt={currentPet.Name}
+                                className="w-full sm:w-60 h-auto rounded object-cover shadow-md"
+                            />
+                            <div className='mt-4 sm:mt-0 sm:ml-4 flex flex-col w-full'>
+                                <div className="space-y-2">
+                                    <div><strong>Type:</strong> {currentPet.Type}</div>
+                                    <div><strong>Breed/Species:</strong> {currentPet.breed_species || "Unknown"}</div>
+                                    <div><strong>Age:</strong> {calculateAge(currentPet.birth_date) || "Not provided"}</div>
                                 </div>
-                                <div className="flex flex-col">
-                                    <strong>Breed/Species:</strong>
-                                    <span>{currentPet.breed_species || "Unknown"}</span>
+                                <div className="flex flex-col sm:flex-row sm:space-x-2 mt-4">
+                                    <button className='btn btn-error' onClick={() => handleDeleteClick(currentPet)}>Delete {currentPet.Name}</button>
+                                    <button className='btn btn-warning mt-2 sm:mt-0' onClick={() => setShowRegister(true)}>Add new register</button>
                                 </div>
-                                <div className="flex flex-col">
-                                    <strong>Age:</strong>
-                                    <span>{calculateAge(currentPet.birth_date) || "Not provided"}</span>
-                                </div>
-                                <button className='btn btn-error mt-1 ms-1 ' onClick={() => handleDeleteClick(currentPet)}>Delete {currentPet.Name}</button>
-                            </div>
-                            <div>
-                                <button className='btn btn-warning mt-1 ms-1 ' onClick={() => setShowRegister(true)}>Add new register</button>
                                 {showRegister && <RegisterFormModal closeModal={() => setShowRegister(false)} pet={currentPet} />}
-
                             </div>
                         </div>
-                    </div>
-                    <div className='col-start-1 row-start-2'>
-                        <h2 className="text-lg font-semibold uppercase letrasLogo  text-amber-600 drop-shadow-[0.7px_0.8px_0.5px_black]">Upcoming events</h2>
-                        {filteredEvents.length === 0 ? (
-                            <p>No events scheduled.</p>
-                        ) : (
-                            <ul className="list bg-base-100 rounded-box shadow-md mb-4">
-                                {filteredEvents.map((event) => {
-                                    const eventPet = pets?.find((p) => p.Name === event.pet);
-                                    return (
-                                        <li key={event.id} className="list-row h-20 flex items-center">
-                                            <div className="text-4xl font-thin opacity-30 tabular-nums w-[7rem]">
-                                                {dayjs(event.start).format("DD/MM")}
-                                            </div>
 
-                                            <div className="list-col-grow">
+                        {/* Row 2: Upcoming Events */}
+                        <div>
+                            <h2 className="text-lg font-semibold uppercase letrasLogo text-amber-600 drop-shadow-[0.7px_0.8px_0.5px_black]">Upcoming events</h2>
+                            {filteredEvents.length === 0 ? (
+                                <p>No events scheduled.</p>
+                            ) : (
+                                <ul className="bg-base-100 rounded-box shadow-md mb-4">
+                                    {filteredEvents.map((event) => (
+                                        <li key={event.id} className="flex items-center p-2 border-b">
+                                            <div className="text-2xl sm:text-4xl font-thin opacity-30 w-[7rem]">{dayjs(event.start).format("DD/MM")}</div>
+                                            <div className="flex-1">
                                                 <div className='font-semibold uppercase opacity-90'>{event.title}</div>
                                             </div>
-                                            {/* cambiar boton aqui que te lleve al calendario o borrar notificacion */}
-                                            <button className="btn btn-ghost ml-auto dropdown dropdown-right dropdown-center">
-                                                <svg
-                                                    className="size-[1.2em]"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 24 24"
-                                                >
+                                            <button className="btn btn-ghost ml-auto dropdown dropdown-right">
+                                                <svg className="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                                     <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor">
                                                         <path d="M6 3L20 12 6 21 6 3z"></path>
                                                     </g>
                                                 </svg>
-                                                <ul tabIndex={0} className="mx-4 dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                                <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box w-52 p-2 shadow-sm">
                                                     <li><a onClick={() => setEditingEvent(event)}>Edit</a></li>
                                                     <li><a onClick={() => handleDeleteEventClick(event)} className="hover:bg-red-700 hover:text-white">Delete</a></li>
                                                 </ul>
                                             </button>
                                         </li>
-                                    )
-                                })}
-                            </ul>
-                        )}
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
                     </div>
-                    <div className='row-span-2 col-start-2 row-start-1'>
-                        <h2 className="text-lg font-semibold uppercase letrasLogo  text-amber-600 drop-shadow-[0.7px_0.8px_0.5px_black]">Register History</h2>
+
+                    {/* Right Column: Register History (Takes Full Height) */}
+                    <div>
+                        <h2 className="text-lg font-semibold uppercase letrasLogo text-amber-600 drop-shadow-[0.7px_0.8px_0.5px_black]">Register History</h2>
                         {Array.isArray(registerData) && registerData.length > 0 ? (
                             <ul className="mt-2 space-y-2">
                                 {registerData.map((entry, index) => (
@@ -246,13 +236,11 @@ const SinglePet = () => {
                                         <p>
                                             <strong>Date:</strong> {dayjs(entry.$createdAt).format("DD/MM/YYYY")}
                                             <span className='float-right'>
-                                                <button className='btn btn-soft btn-error' onClick={() => handleDeleteRegister(entry)} >X</button>
+                                                <button className='btn btn-error btn-sm btn-soft' onClick={() => handleDeleteRegister(entry)}>X</button>
                                             </span>
                                         </p>
                                         {entry.food && <p><strong>Food:</strong> {entry.food}</p>}
-                                        {entry.last_feeding && (<p>
-                                            <strong>Last feeding:</strong> {new Date(entry.last_feeding).toLocaleDateString("en-US", { day: "numeric", month: "long" })}
-                                        </p>)}
+                                        {entry.last_feeding && <p><strong>Last feeding:</strong> {new Date(entry.last_feeding).toLocaleDateString("en-US", { day: "numeric", month: "long" })}</p>}
                                         {entry.weight && <p><strong>Weight:</strong> {entry.weight} kg</p>}
                                         {entry.substrate && <p><strong>Substrate:</strong> {entry.substrate}</p>}
                                         {entry.temperature && <p><strong>Temperature:</strong> {entry.temperature} ºC</p>}
@@ -266,41 +254,36 @@ const SinglePet = () => {
                         ) : (
                             <p>No register data available.</p>
                         )}
-
                     </div>
-
-
                 </div>
-            )}
-
-
+            </div>
+        )}
+    
+            {/* Modals */}
             {editingEvent && (
-                <AddEventModal
-                    closeModal={() => setEditingEvent(null)}
-                    initialData={editingEvent}
-                />
+                <AddEventModal closeModal={() => setEditingEvent(null)} initialData={editingEvent} />
             )}
+            <ConfirmationModal 
+                show={isEventConfirmVisible} 
+                onConfirm={confirmDeleteEvent} 
+                onCancel={cancelDelete} 
+                message={`Are you sure you want to delete "${eventToDelete?.title}"?`} />
 
-            <ConfirmationModal
-                show={isEventConfirmVisible}
-                onConfirm={confirmDeleteEvent}
-                onCancel={cancelDelete}
-                message={`Are you sure you want to delete "${eventToDelete?.title}"?`}
-            />
-            <ConfirmationModal
-                show={isPetConfirmVisible}
-                onConfirm={confirmDeletePet}
-                onCancel={cancelDeletePet}
-                message={`Are you sure you want to delete "${petToDelete?.Name}"?`}
-            />
-            <ConfirmationModal
-                show={isRegisterConfirmVisible}
-                onConfirm={confirmDeleteRegister}
-                onCancel={cancelDeleteRegister}
-                message={`Are you sure you want to delete this register?`}
-            />
+            <ConfirmationModal 
+                show={isPetConfirmVisible} 
+                onConfirm={confirmDeletePet} 
+                onCancel={cancelDeletePet} 
+                message={`Are you sure you want to delete "${petToDelete?.Name}"?`} />
+
+            <ConfirmationModal 
+                show={isRegisterConfirmVisible} 
+                onConfirm={confirmDeleteRegister} 
+                onCancel={cancelDeleteRegister} 
+                message={`Are you sure you want to delete this register?`} />
+
         </div>
     );
+    
 };
 
 export default SinglePet;
