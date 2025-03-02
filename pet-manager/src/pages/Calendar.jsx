@@ -21,9 +21,9 @@ const MyCalendar = () => {
   const [isConfirmVisible, setIsConfirmVisible] = useState(false);
   const [eventToDelete, setEventToDelete] = useState(null);
 
-  const [selectedView,  setSelectedView] = useState('month');
+  const [selectedView, setSelectedView] = useState('month');
 
- 
+
 
   const components = {
     event: (props) => (
@@ -46,35 +46,42 @@ const MyCalendar = () => {
         setSelectedView(view);
         props.onView(view);
       }
-    
+
       return (
-        <div className="flex justify-between items-center p-4 bg-warning rounded-md">
+        <div className="flex flex-col md:flex-row justify-between items-center p-4 bg-warning rounded-md gap-2 md:gap-0">
           {/* Left Side - Navigation */}
-          <div className="flex gap-2">
-            <button onClick={() => props.onNavigate("TODAY")} className="btn">
+          <div className="flex flex-wrap justify-center md:justify-start gap-2">
+            <button onClick={() => props.onNavigate("TODAY")} className="btn btn-sm md:btn-md">
               Today
             </button>
-            <button onClick={() => props.onNavigate("PREV")} className="btn">
+            <button onClick={() => props.onNavigate("PREV")} className="btn btn-sm md:btn-md">
               Back
             </button>
-            <button onClick={() => props.onNavigate("NEXT")} className="btn">
+            <button onClick={() => props.onNavigate("NEXT")} className="btn btn-sm md:btn-md">
               Next
             </button>
-            <button onClick={openModal} className="btn bg-blue-500 text-white px-3 py-1 rounded-md">
+            <button
+              onClick={openModal}
+              className="btn btn-sm md:btn-md bg-blue-500 text-white px-3 py-1 rounded-md"
+            >
               Add Event
             </button>
           </div>
 
           {/* Center - Month Label */}
-          <span className="letrasLogo text-3xl text-amber-600 drop-shadow-[1px_1.5px_1px_black]">{props.label}</span>
+          <span className="letrasLogo text-xl md:text-3xl text-amber-600 drop-shadow-[1px_1.5px_1px_black] text-center mt-2 md:mt-0">
+            {props.label}
+          </span>
 
           {/* Right Side - View Selection */}
-          <div className="flex gap-2">
+          <div className="flex flex-wrap justify-center md:justify-end gap-2">
             {["month", "week", "day", "agenda"].map((view) => (
               <button
-              key={view}
-              onClick={() => handleViewChange(view)}
-              className={`btn ${selectedView === view ? "bg-blue-500 text-white" : ""}`}>
+                key={view}
+                onClick={() => handleViewChange(view)}
+                className={`btn btn-sm md:btn-md ${selectedView === view ? "bg-blue-500 text-white" : ""
+                  }`}
+              >
                 {view.charAt(0).toUpperCase() + view.slice(1)}
               </button>
             ))}
@@ -111,9 +118,9 @@ const MyCalendar = () => {
       fetchEvents(user.$id); // Fetch the updated events list
       setEventToDelete(null);
       setIsConfirmVisible(false);
-      toast.warning("Event deleted!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true})
+      toast.warning("Event deleted!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true })
     } catch (error) {
-      toast.error("Error deleting event", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
+      toast.error("Error deleting event", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
       console.error("Error deleting event:", error);
     }
   }
@@ -122,11 +129,11 @@ const MyCalendar = () => {
     setEventToDelete(null);
     setIsConfirmVisible(false);
   };
-  
+
 
 
   return (
-    
+
     <div className='max-w-11/12 justify-center mx-auto max-h-screen mt-6'>
 
       {showModal && <AddEventModal closeModal={closeModal} />}

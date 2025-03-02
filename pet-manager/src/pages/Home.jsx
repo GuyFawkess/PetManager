@@ -121,39 +121,36 @@ const Home = () => {
               // Relacionamos el evento con el pet para buscar la info hay que cambiarlo para que busque por id en vez de nombre
               const eventPet = pets?.find((p) => p.Name === event.pet);
               return (
-                <li key={event.id} className="list-row h-20 flex items-center">
-                  <div className="text-4xl font-thin opacity-30 tabular-nums w-[7rem]">
+                <li key={event.id} className="list-row flex flex-wrap items-center gap-2 sm:gap-3 p-3">
+                  <div className="text-2xl sm:text-4xl font-thin opacity-30 tabular-nums w-[5rem] sm:w-[7rem] text-center">
                     {dayjs(event.start).format("DD/MM")}
                   </div>
                   <div className="flex items-center">
                     <img
-                      className="size-10 rounded-box"
+                      className="size-10 sm:size-12 rounded-full h-10 sm:h-12 w-10 sm:w-12"
                       alt={event.pet || "Unknown Pet"}
                       src={eventPet?.Pet_Image || `https://picsum.photos/id/${randomNumber}/300/400`}
                     />
                   </div>
-                  <div className="list-col-grow">
-                    <div>{event.title}</div>
+                  <div className="list-col-grow min-w-[50%] sm:min-w-[auto]">
+                    <div className="text-sm sm:text-base">{event.title}</div>
                     <div className="text-xs uppercase font-semibold opacity-60">
                       {event.pet ? `With ${event.pet}` : "No Pet Assigned"}
                     </div>
                   </div>
                   <button className="btn btn-ghost ml-auto dropdown dropdown-right dropdown-center">
-                    <svg
-                      className="size-[1.2em]"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="size-[1em] sm:size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                       <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor">
                         <path d="M6 3L20 12 6 21 6 3z"></path>
                       </g>
                     </svg>
-                    <ul tabIndex={0} className="mx-4 dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                    <ul tabIndex={0} className="mx-4 dropdown-content menu bg-base-100 rounded-box z-1 w-40 sm:w-52 p-2 shadow-sm">
                       <li><a onClick={() => setEditingEvent(event)}>Edit</a></li>
                       <li><a onClick={() => handleDeleteClick(event)} className="hover:bg-red-700 hover:text-white">Delete</a></li>
                     </ul>
                   </button>
                 </li>
+
               );
             })}
           </ul>
