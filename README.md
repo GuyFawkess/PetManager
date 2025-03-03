@@ -56,11 +56,6 @@ To run this project locally, follow these steps:
 - View and manage events through the calendar.
 - Receive notifications for upcoming events.
 
-## Contributing
-
-Feel free to fork this repository and submit pull requests. Suggestions and improvements are always welcome!
-
-## License
 
 This project is licensed under the MIT License.
 
