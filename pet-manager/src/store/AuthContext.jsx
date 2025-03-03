@@ -25,14 +25,12 @@ export const AuthProvider = ({ children }) => {
             )
             let accountDetails = await account.get();
             setUser(accountDetails);
-            toast("Welcome Back! <3", {position:'top-center', theme:'colored', closeOnClick: true, transition: Zoom, autoClose: 2000, hideProgressBar: true, theme: "dark"})
-
+            toast("Welcome Back! <3", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Zoom, autoClose: 2000, hideProgressBar: true, theme: "dark" })
         } catch (error) {
-            toast.error("Error logging in!", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce, className: "text-center"})
-      set({ loading: false });
+            toast.error("Error logging in!", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce, className: "text-center" })
+            set({ loading: false });
             console.log("Login error:", error.message);
         }
-
         setLoading(false);
     };
 
@@ -41,19 +39,17 @@ export const AuthProvider = ({ children }) => {
         try {
             await account.deleteSession("current");
             setUser(null);
-            toast("We will miss you!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Zoom, autoClose: 2000, hideProgressBar: true, theme: "dark"})
-            
+            toast("We will miss you!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Zoom, autoClose: 2000, hideProgressBar: true, theme: "dark" })
         } catch (error) {
             console.log("Logout error:", error.message);
-            toast.error("Error logging out", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
-      set({ loading: false });
+            toast.error("Error logging out", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
+            set({ loading: false });
         }
         setLoading(false);
     };
 
     const registerUser = async (userInfo) => {
         setLoading(true);
-
         try {
             let response = await account.create(
                 ID.unique(),
@@ -61,23 +57,20 @@ export const AuthProvider = ({ children }) => {
                 userInfo.password1,
                 userInfo.name
             )
-            console.log("✅ User registered:", response);
-
-
+            // console.log("✅ User registered:", response);
             await account.createEmailPasswordSession(
                 userInfo.email,
                 userInfo.password1
             )
             let accountDetails = await account.get();
             setUser(accountDetails);
-            toast.success("Account created!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true})
+            toast.success("Account created!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Flip, autoClose: 2000, hideProgressBar: true })
 
         } catch (error) {
-            toast.error("Error regestering!", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
-      set({ loading: false });
+            toast.error("Error regestering!", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
+            set({ loading: false });
             console.log("Registration error:", error.message);
         }
-
         setLoading(false);
     };
 
@@ -87,12 +80,11 @@ export const AuthProvider = ({ children }) => {
             let accountDetails = await account.get();
             setUser(accountDetails);
         } catch (error) {
-            toast.error("User is not logged in", {position:'top-center', hideProgressBar: true, theme:'colored', closeOnClick: true, transition: Bounce})
+            toast.error("User is not logged in", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
             setLoading(false);
             console.log("User is not logged in:", error.message);
             setUser(null);
         }
-
         setLoading(false);
     };
 

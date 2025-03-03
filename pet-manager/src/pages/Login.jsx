@@ -19,14 +19,11 @@ const Login = () => {
     e.preventDefault();
     const email = loginForm.current.email.value;
     const password = loginForm.current.password.value;
-
     const userInfo = { email, password };
     loginUser(userInfo);
   }
 
-
   return (
-    // HAY QUE MIRAR COMO HACER LA IMAGEN SI SOBRE PONERLA O HACERLA RESPONSIVE PERO HAY QUE MIRARLO
     <div className="h-120 flex items-center  bg-[url('/src/assets/fish_bowl.svg')] 
     bg-no-repeat bg-[length:50%] bg-[position:right_top]">
       <div className='mx-auto'>

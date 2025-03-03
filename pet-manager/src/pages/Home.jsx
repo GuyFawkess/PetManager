@@ -20,7 +20,6 @@ const Home = () => {
 
   const [editingEvent, setEditingEvent] = useState(null);
 
-
   useEffect(() => {
     if (user) {
       fetchEvents(user.$id);
@@ -30,7 +29,6 @@ const Home = () => {
 
   useEffect(() => {
     const today = dayjs().startOf("day");
-
     let updatedEvents = events;
     if (showUpcoming) {
       updatedEvents = events.filter(
@@ -41,7 +39,6 @@ const Home = () => {
     updatedEvents = updatedEvents.sort((a, b) => new Date(a.start) - new Date(b.start));
     setFilteredEvents(updatedEvents);
   }, [events, showUpcoming]);
-
 
   const handleDeleteClick = (event) => {
     setEventToDelete(event);
@@ -138,7 +135,7 @@ const Home = () => {
                       {event.pet ? `With ${event.pet}` : "No Pet Assigned"}
                     </div>
                   </div>
-                  <button className="btn btn-ghost ml-auto dropdown dropdown-right dropdown-center">
+                  <button className="btn btn-ghost ml-auto dropdown dropdown-bottom dropdown-end md:dropdown-right">
                     <svg className="size-[1em] sm:size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                       <g strokeLinejoin="round" strokeLinecap="round" strokeWidth="2" fill="none" stroke="currentColor">
                         <path d="M6 3L20 12 6 21 6 3z"></path>

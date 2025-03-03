@@ -20,7 +20,7 @@ const AddPetModal = ({ closeModal }) => {
     if (file) {
       setSelectedFile(file); // Store the file for later use
     }
-  }; 
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -37,13 +37,12 @@ const AddPetModal = ({ closeModal }) => {
     }
   };
 
-
   return (
     <div id="modal-bg" className="fixed inset-0 min-h-screen bg-zinc-700/50 flex justify-center items-center" onClick={closeModalBgClick}>
       <div className="bg-gray-50 p-4 m-4 rounded-lg w-10/12 max-w-screen-md md:w-7/12 shadow-2xl relative">
         <a onClick={closeModal} className="absolute right-5 text-2xl hover:cursor-pointer">X</a>
         <h1 className="text-4xl py-8 font-bold text-center">Add a new pet!
-        <div className="dropdown dropdown-end">
+          <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-circle btn-ghost btn-xs text-info">
               <svg
                 tabIndex={0}
@@ -87,8 +86,6 @@ const AddPetModal = ({ closeModal }) => {
               <option value="Fish">Fish</option>
               <option value="Invertebrate">Invertebrate</option>
             </select>
-            <span className="fieldset-label">Optional</span>
-            {/* borrar esta linea de arriba */}
           </fieldset>
           <fieldset className="fieldset">
             <legend className="fieldset-legend">What is your pet's breed or species?</legend>

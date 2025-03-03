@@ -1,8 +1,7 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../store/AuthContext'
 import { Menu, X } from 'lucide-react';
-
 
 const Header = () => {
     const { user, logoutUser } = useAuth();
@@ -11,7 +10,6 @@ const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
 
     const isActive = (path) => location.pathname === path ? "btn btn-warning uppercase" : "btn btn-ghost uppercase";
-
 
     return (
         <div className="flex justify-between px-4 border-b-2 border-black">
@@ -24,7 +22,7 @@ const Header = () => {
             </button>
             {user && (
                 <div className={`absolute md:relative left-0 w-full md:w-auto bg-white md:bg-transparent flex flex-col md:flex-row gap-4 md:gap-6 items-center px-4 py-2 md:p-0 transition-all duration-300 ${menuOpen ? "block" : "hidden md:flex"} z-200`}>
-                    <Link onClick={() => setMenuOpen(false)} to="/" className={`${isActive("/")}` }>Home</Link>
+                    <Link onClick={() => setMenuOpen(false)} to="/" className={`${isActive("/")}`}>Home</Link>
                     <Link onClick={() => setMenuOpen(false)} to="/pets" className={`${isActive("/pets")}`}>My Pets</Link>
                     <Link onClick={() => setMenuOpen(false)} to="/calendar" className={`${isActive("/calendar")}`}>Calendar</Link>
 

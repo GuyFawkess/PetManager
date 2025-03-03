@@ -1,15 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import usePetsStore from "../store/usePetsStore";
+import React, { useState } from "react";
 import { useRegisterStore } from "../store/useRegisterStore";
 import { useAuth } from "../store/AuthContext";
-import ConfirmationModal from '../components/ConfirmationModal';
-import { toast, Flip, Bounce } from "react-toastify";
-
 
 const RegisterFormModal = ({ closeModal, pet }) => {
 
-    const { fetchRegisterData, addRegisterEntry } = useRegisterStore();
-    const { user } = useAuth();
+    const { addRegisterEntry } = useRegisterStore();
     const [register, setRegister] = useState({
         activity_level: "", food: "", substrate: "", water: "", last_feeding: "", temperature: "",
         humidity: "", weight: "", medical_conditions: [], medication: []
@@ -27,15 +22,15 @@ const RegisterFormModal = ({ closeModal, pet }) => {
     const handleInputChange = (e) => {
         const { name, value, type } = e.target;
         let parsedValue = value;
-    
+
         if (type === "number") {
             parsedValue = value ? parseFloat(value) : null;
         } else if (type === "date") {
-            parsedValue = value || "";}
-    
+            parsedValue = value || "";
+        }
+
         setRegister({ ...register, [name]: parsedValue });
     };
-    
 
     const handleAddCondition = () => {
         if (newCondition) {
@@ -78,13 +73,12 @@ const RegisterFormModal = ({ closeModal, pet }) => {
         await addRegisterEntry(pet.$id, sanitizedRegister);
         console.log("Register data:", register)
         setRegister({
-        activity_level: "", food: "", substrate: "", water: "", last_feeding: "", temperature: "",
-        humidity: "", weight: "", medical_conditions: [], medication: []
+            activity_level: "", food: "", substrate: "", water: "", last_feeding: "", temperature: "",
+            humidity: "", weight: "", medical_conditions: [], medication: []
         })
         setLoading(false);
         closeModal();
     }
-    
 
     return (
         <div id="modal-bg" className="fixed inset-0 z-2 min-h-screen bg-zinc-700/50 flex justify-center items-center" onClick={closeModalBgClick}>
@@ -223,7 +217,6 @@ const RegisterFormModal = ({ closeModal, pet }) => {
             </div>
         </div>
     );
-
 }
 
 export default RegisterFormModal;
