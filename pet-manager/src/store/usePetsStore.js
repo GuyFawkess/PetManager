@@ -8,7 +8,6 @@ const usePetsStore = create((set) => ({
   pets: [],
   loading: false,
 
-  // fetch pets from the server
   fetchPets: async (OwnerID) => {
     if (!OwnerID) {
       console.error("OwnerID is undefined or null");
@@ -24,17 +23,12 @@ const usePetsStore = create((set) => ({
       toast.error("Error fetching pets", { position: 'top-center', hideProgressBar: true, theme: 'colored', closeOnClick: true, transition: Bounce })
       set({ loading: false });
     }
-
   },
 
-  // Action: Add a new pet
   createPet: async (petData, userID, file) => {
     set({ loading: true });
-
     try {
       let imageUrl = "";
-
-      //Upload image if a file is provided
       if (file) {
         const fileResponse = await storage.createFile(STORAGE_ID, ID.unique(), file);
         console.log("File Upload Response:", fileResponse);
@@ -73,14 +67,10 @@ const usePetsStore = create((set) => ({
     }
   },
 
-
-  // Action: Remove a pet by ID
   removePet: async (id) => {
     set({ loading: true });
-
     try {
       const pet = await database.getDocument(DATABASE_ID, COLLECTION_ID_PETS, id);
-
       // Extract file ID from Pet_Image URL
       const imageUrl = pet.Pet_Image;
       let fileId = null
@@ -90,13 +80,11 @@ const usePetsStore = create((set) => ({
       }
       // Delete pet document
       await database.deleteDocument(DATABASE_ID, COLLECTION_ID_PETS, id);
-
       // Delete image if fileId was extracted
       if (fileId) {
         await storage.deleteFile(STORAGE_ID, fileId);
         console.log(`Image ${fileId} deleted successfully.`);
       }
-
       // Update state
       set((state) => ({
         pets: state.pets.filter((pet) => pet.$id !== id),
@@ -108,8 +96,6 @@ const usePetsStore = create((set) => ({
       set({ loading: false });
     }
   },
-
 }));
-
 
 export default usePetsStore;

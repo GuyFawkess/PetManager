@@ -23,8 +23,6 @@ const MyCalendar = () => {
 
   const [selectedView, setSelectedView] = useState('month');
 
-
-
   const components = {
     event: (props) => (
       <div style={{ color: "black", fontSize: "12px", position: "relative" }}>
@@ -41,7 +39,6 @@ const MyCalendar = () => {
       </div>
     ),
     toolbar: (props) => {
-
       const handleViewChange = (view) => {
         setSelectedView(view);
         props.onView(view);
@@ -67,12 +64,10 @@ const MyCalendar = () => {
               Add Event
             </button>
           </div>
-
           {/* Center - Month Label */}
           <span className="letrasLogo text-xl md:text-3xl text-amber-600 drop-shadow-[1px_1.5px_1px_black] text-center mt-2 md:mt-0">
             {props.label}
           </span>
-
           {/* Right Side - View Selection */}
           <div className="flex flex-wrap justify-center md:justify-end gap-2">
             {["month", "week", "day", "agenda"].map((view) => (
@@ -130,10 +125,7 @@ const MyCalendar = () => {
     setIsConfirmVisible(false);
   };
 
-
-
   return (
-
     <div className='max-w-11/12 justify-center mx-auto max-h-screen mt-6'>
 
       {showModal && <AddEventModal closeModal={closeModal} />}
@@ -147,14 +139,12 @@ const MyCalendar = () => {
         style={{ height: 500 }}
         components={components}
       />
-
       <ConfirmationModal
         show={isConfirmVisible}
         onConfirm={confirmDelete}
         onCancel={cancelDelete}
         message={`Are you sure you want to delete "${eventToDelete?.title}"?`}
       />
-
     </div>
   );
 };

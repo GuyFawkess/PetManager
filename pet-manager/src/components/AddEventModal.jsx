@@ -7,87 +7,85 @@ import { toast, Flip } from "react-toastify";
 
 const AddEventModal = ({ closeModal, initialData = null }) => {
 
-    const { createEvent, updateEvent } = useEventsStore();
-    const { pets, fetchPets, loading } = usePetsStore();
-    const { user } = useAuth();
-    const [formData, setFormData] = useState(initialData || {
-        title: '',
-        start: '',
-        end: '',
-        pet: '',
-        petID: ''
-    });
+  const { createEvent, updateEvent } = useEventsStore();
+  const { pets, fetchPets, loading } = usePetsStore();
+  const { user } = useAuth();
+  const [formData, setFormData] = useState(initialData || {
+    title: '',
+    start: '',
+    end: '',
+    pet: '',
+    petID: ''
+  });
 
-    const date = new Date("Wed Feb 19 2025 15:17:00 GMT+0000");
-    const formattedDate = date.toISOString().slice(0, 16); // "2025-02-19T15:17"
+  const date = new Date("Wed Feb 19 2025 15:17:00 GMT+0000");
+  const formattedDate = date.toISOString().slice(0, 16); // "2025-02-19T15:17"
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-        if (name === "pet") {
-          const selectedPet = pets.find(pet => pet.Name === value);
-          setFormData((prev) => ({ ...prev, petID: selectedPet ? selectedPet.$id : '' }));
-        }
-      };
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "pet") {
+      const selectedPet = pets.find(pet => pet.Name === value);
+      setFormData((prev) => ({ ...prev, petID: selectedPet ? selectedPet.$id : '' }));
+    }
+  };
 
-      const handleFormSubmit = async (e) => {
-        e.preventDefault();
-      
-        if (!formData.title || !formData.start || !formData.end) {
-          alert('Please fill all the fields');
-          return;
-        }
-      
-        const startDate = new Date(formData.start);
-        const endDate = new Date(formData.end);
-      
-        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-          alert('Invalid date format.');
-          return;
-        }
-      
-        const eventData = {
-          Title: formData.title,
-          StartDate: startDate.toISOString(),
-          EndDate: endDate.toISOString(),
-          OwnerID: user.$id,
-          PetID: formData.petID,
-          PetName: formData.pet
-        };
-      
-        if (initialData) {
-          await updateEvent(initialData.id, eventData);
-          toast.success("Event updated!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, hideProgressBar: true, autoClose: 2000});
-        } else {
-          await createEvent(eventData);
-          toast.info("Event created!", {position:'top-center', theme:'colored', closeOnClick: true, transition: Flip, hideProgressBar: true, autoClose: 2000});
-        }
-      
-        setFormData({ title: '', start: '', end: '', pet: '', petID: '' });
-        closeModal();
-      };
-      
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
 
-      const closeModalBgClick = (e) => {
-        if (e.target.id === "modal-bg-event") {
-          closeModal();
-        }
-    
-      }
+    if (!formData.title || !formData.start || !formData.end) {
+      alert('Please fill all the fields');
+      return;
+    }
 
-      useEffect(() => {
-          if (user) {
-            fetchPets(user.$id);
-          }
-        }, [user]);
-    
-    return (
-        <div id="modal-bg-event" className="fixed inset-0 min-h-screen bg-zinc-700/50 flex justify-center items-center z-[1000]" onClick={closeModalBgClick}>
-            <div className="bg-gray-50 p-4 m-4 rounded-lg w-10/12 max-w-screen-md md:w-7/12 shadow-2xl relative">
-            <a onClick={closeModal} className="absolute right-5 text-2xl hover:cursor-pointer">X</a>
-            <h1 className=" text-center text-4xl py-8 font-bold">Add an Event</h1>
-            <div className="bg-orange-400 w-5/12 h-1 mx-auto mb-8"></div>
-            <form onSubmit={handleFormSubmit} className="mb-4 bg-white p-4 rounded shadow">
+    const startDate = new Date(formData.start);
+    const endDate = new Date(formData.end);
+
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      alert('Invalid date format.');
+      return;
+    }
+
+    const eventData = {
+      Title: formData.title,
+      StartDate: startDate.toISOString(),
+      EndDate: endDate.toISOString(),
+      OwnerID: user.$id,
+      PetID: formData.petID,
+      PetName: formData.pet
+    };
+
+    if (initialData) {
+      await updateEvent(initialData.id, eventData);
+      toast.success("Event updated!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Flip, hideProgressBar: true, autoClose: 2000 });
+    } else {
+      await createEvent(eventData);
+      toast.info("Event created!", { position: 'top-center', theme: 'colored', closeOnClick: true, transition: Flip, hideProgressBar: true, autoClose: 2000 });
+    }
+    setFormData({ title: '', start: '', end: '', pet: '', petID: '' });
+    closeModal();
+  };
+
+  const closeModalBgClick = (e) => {
+    if (e.target.id === "modal-bg-event") {
+      closeModal();
+    }
+
+  }
+
+  useEffect(() => {
+    if (user) {
+      fetchPets(user.$id);
+    }
+  }, [user]);
+
+  return (
+    <div id="modal-bg-event" className="fixed inset-0 min-h-screen bg-zinc-700/50 flex justify-center items-center z-[1000]" onClick={closeModalBgClick}>
+      <div className="bg-gray-50 p-4 m-4 rounded-lg w-10/12 max-w-screen-md md:w-7/12 shadow-2xl relative">
+        <a onClick={closeModal} className="absolute right-5 text-2xl hover:cursor-pointer">X</a>
+        <h1 className=" text-center text-4xl py-8 font-bold">Add an Event</h1>
+        <div className="bg-orange-400 w-5/12 h-1 mx-auto mb-8"></div>
+        <form onSubmit={handleFormSubmit} className="mb-4 bg-white p-4 rounded shadow">
           <div className="mb-4">
             <label className="block font-bold mb-2">Title</label>
             <input
@@ -144,12 +142,10 @@ const AddEventModal = ({ closeModal, initialData = null }) => {
             {initialData ? "Update Event" : "Add Event"}
           </button>
         </form>
-      
-            </div>
-        </div>
-    )
 
-
+      </div>
+    </div>
+  )
 }
 
 

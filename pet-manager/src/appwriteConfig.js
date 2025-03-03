@@ -10,7 +10,6 @@ export const COLLECTION_ID_REGISTER = import.meta.env.VITE_COLLECTION_ID_REGISTE
 const client = new Client();
 client.setProject(PROJECT_ID);
 
-
 export const account = new Account(client);
 export const database = new Databases(client);
 export const storage = new Storage(client);

@@ -44,7 +44,6 @@ export const useRegisterStore = create((set) => ({
         set({ loading: true });
         try {
             const response = await database.createDocument(DATABASE_ID, COLLECTION_ID_REGISTER, ID.unique(), { ...newEntry, PetID });
-
             set((state) => ({
                 registerData: {
                     ...state.registerData,
@@ -68,7 +67,7 @@ export const useRegisterStore = create((set) => ({
             set((state) => ({
                 registerData: state.registerData.filter((register) => register.$id !== registerID),
                 loading: false,
-              }));
+            }));
             console.log("Deleted register:", registerID)
         }
         catch (error) {
@@ -77,5 +76,4 @@ export const useRegisterStore = create((set) => ({
             set({ loading: false });
         }
     }
-
 }))

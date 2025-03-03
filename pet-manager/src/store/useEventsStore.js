@@ -5,17 +5,15 @@ import { ID, Query } from 'appwrite';
 import { toast, Bounce } from 'react-toastify';
 
 const useEventsStore = create((set) => ({
-  events: [], // State: List of events
+  events: [],
   loading: false,
 
-  // Action: Fetch events form appwrite
   fetchEvents: async (OwnerID) => {
     set({ loading: true });
 
     try {
       const response = await database.listDocuments(DATABASE_ID, COLLECTION_ID_EVENTS, [Query.equal("OwnerID", OwnerID)]);
 
-      //convertir las fechas para ser mostradas en el frontend
       const formattedEvents = response.documents.map((doc) => ({
         id: doc.$id,
         start: new Date(doc.StartDate),
@@ -33,10 +31,8 @@ const useEventsStore = create((set) => ({
     }
   },
 
-  // Action: Add a new event
   createEvent: async (eventData, userID) => {
     set({ loading: true });
-
     try {
       const response = await database.createDocument(
         DATABASE_ID,
@@ -45,7 +41,6 @@ const useEventsStore = create((set) => ({
         eventData
       );
 
-      // convert and add the new created event to the store
       const newEvent = {
         id: response.$id,
         start: new Date(response.StartDate),
@@ -66,11 +61,8 @@ const useEventsStore = create((set) => ({
     }
   },
 
-
-  // Action: Update an event
   updateEvent: async (eventID, updatedData) => {
     set({ loading: true });
-
     try {
       const response = await database.updateDocument(
         DATABASE_ID,
@@ -79,7 +71,6 @@ const useEventsStore = create((set) => ({
         updatedData
       );
 
-      // Convert and update the event in the store
       set((state) => ({
         events: state.events.map((event) =>
           event.id === eventID
@@ -101,14 +92,10 @@ const useEventsStore = create((set) => ({
     }
   },
 
-  // Action: Remove an event by ID
   removeEvent: async (id) => {
     set({ loading: true });
-
     try {
       await database.deleteDocument(DATABASE_ID, COLLECTION_ID_EVENTS, id);
-
-      // Update the store
       set((state) => ({
         events: state.events.filter((event) => event.$id !== id),
         loading: false,
@@ -119,7 +106,6 @@ const useEventsStore = create((set) => ({
       set({ loading: false });
     }
   },
-
 }));
 
 export default useEventsStore;
