@@ -40,10 +40,11 @@ To run this project locally, follow these steps:
 
 3. Set up Appwrite:
 
+   - In case you can't log in or sign up, because it might out of use:
    - Create an Appwrite project and configure your database, authentication, and storage.
    - Update the `.env` file with your Appwrite credentials.
 
-4. Start the development server:
+5. Start the development server:
 
    ```bash
    npm run dev
@@ -54,10 +55,8 @@ To run this project locally, follow these steps:
 - Add your pets and input relevant details.
 - Register appointments and events for your pets.
 - View and manage events through the calendar.
-- Receive notifications for upcoming events.
+- Receive notifications every time you interact with the app (creating a pet or event for example).
 
-
-This project is licensed under the MIT License.
 
 ---
 
